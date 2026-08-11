@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Analytics Platform - High Level Architecture</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0F172A;
+            min-height: 100vh;
+            padding: 40px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #F1F5F9;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+        .subtitle {
+            color: #94A3B8;
+            font-size: 16px;
+            margin-bottom: 40px;
+        }
+        
+        /* High Level Architecture Diagram */
+        .arch-diagram {
+            background: #1E293B;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+        }
+        
+        .arch-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+        
+        .layer {
+            background: #0F172A;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        
+        .layer-title {
+            color: #F1F5F9;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid;
+        }
+        
+        .layer-ingestion .layer-title { border-color: #3B82F6; }
+        .layer-processing .layer-title { border-color: #8B5CF6; }
+        .layer-output .layer-title { border-color: #10B981; }
+        
+        .service {
+            background: #1E293B;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: #F1F5F9;
+            border: 1px solid #334155;
+            transition: all 0.2s;
+        }
+        
+        .service:hover {
+            transform: translateX(4px);
+            border-color: #475569;
+        }
+        
+        .service-icon {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .layer-ingestion .service-icon { background: #3B82F6; }
+        .layer-processing .service-icon { background: #8B5CF6; }
+        .layer-output .service-icon { background: #10B981; }
+        
+        .external-systems {
+            margin-top: 32px;
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        
+        .external-box {
+            background: #1E293B;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 12px 20px;
+            color: #94A3B8;
+            font-size: 12px;
+        }
+        
+        .external-box.monitor {
+            border-color: #F59E0B;
+            color: #F59E0B;
+        }
+        
+        .external-box.alert {
+            border-color: #EF4444;
+            color: #EF4444;
+        }
+        
+        .external-box.dashboard {
+            border-color: #06B6D4;
+            color: #06B6D4;
+        }
+        
+        /* Data Flow Arrows */
+        .flow-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #475569;
+            font-size: 24px;
+            padding: 20px 0;
+        }
+        
+        /* Legend */
+        .legend {
+            display: flex;
+            gap: 32px;
+            margin-top: 32px;
+            justify-content: center;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #94A3B8;
+            font-size: 13px;
+        }
+        
+        .legend-box {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+        }
+        
+        /* Stats */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-top: 32px;
+        }
+        
+        .stat-card {
+            background: #0F172A;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #F1F5F9;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #64748B;
+            margin-top: 4px;
+        }
+        
+        .stat-card:nth-child(1) .stat-value { color: #3B82F6; }
+        .stat-card:nth-child(2) .stat-value { color: #8B5CF6; }
+        .stat-card:nth-child(3) .stat-value { color: #10B981; }
+        .stat-card:nth-child(4) .stat-value { color: #F59E0B; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Health Analytics Platform</h1>
+        <p class="subtitle">High-Level Architecture — Service Composition</p>
+        
+        <div class="arch-diagram">
+            <div class="arch-grid">
+                <!-- Ingestion Layer -->
+                <div class="layer layer-ingestion">
+                    <div class="layer-title">📥 Ingestion</div>
+                    <div class="service">
+                        <span class="service-icon"></span>
+                        OpenTelemetry Collector
+                    </div>
+                    <div class="service">
+                        <span class="service-icon"></span>
+                        Prometheus Remote-Write
+                    </div>
+                    <div class="service">
+                        <span class="service-icon"></span>
+                        REST API Endpoint
+                    </div>
+                    <div class="service">
+                        <span class="service-icon"></span>
+                        Webhook Receivers
+                    </div>
+                </div>
+                
+                <div class="flow-arrow">→</div>
+                
+                <!-- Processing Layer -->
+                <div class="layer layer-processing">
+                    <div class="layer-title">⚙️ Processing</div>
+                    <div class="service">
+                        <span class="service-icon"></span>
+                        Telemetry Engine
+                    </div>
+                    <div class="service">
+                        <span class="service-icon"></span>
+                        Health Scoring Engine
+                    </div>
+                    <div class="service">
+                        <span class="service-icon"></span>
+                        Prediction Engine
+                    </div>
+                    <div class="service">
+                        <span class="service-icon"></span>
+                        Correlation Engine
+                    </div>
+                    <div class="service">
+                        <span class="service-icon"></span>
+                        Blast Radius Analyzer
+                    </div>
+                    <div class="service">
+                        <span class="service-icon"></span>
+                        Explainability Engine
+                    </div>
+                </div>
+                
+                <div class="flow-arrow">→</div>
+                
+                <!-- Output Layer -->
+                <div class="layer layer-output">
+                    <div class="layer-title">📤 Output</div>
+                    <div class="service">
+                        <span class="service-icon"></span>
+                        Alert Service
+                    </div>
+                    <div class="service">
+                        <span class="service-icon"></span>
+                        Notification Service
+                    </div>
+                    <div class="service">
+                        <span class="service-icon"></span>
+                        API Gateway
+                    </div>
+                    <div class="service">
+                        <span class="service-icon"></span>
+                        PostgreSQL Database
+                    </div>
+                </div>
+            </div>
+            
+            <!-- External Systems -->
+            <div class="external-systems">
+                <div class="external-box monitor">📊 Datadog</div>
+                <div class="external-box monitor">📊 Dynatrace</div>
+                <div class="external-box monitor">📊 Splunk</div>
+                <div class="external-box monitor">📊 Prometheus</div>
+                <div class="external-box alert">🔔 PagerDuty</div>
+                <div class="external-box alert">🔔 OpsGenie</div>
+                <div class="external-box alert">🔔 ServiceNow</div>
+                <div class="external-box dashboard">📈 Grafana</div>
+            </div>
+            
+            <!-- Stats -->
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-value">&lt;2%</div>
+                    <div class="stat-label">Collector CPU Overhead</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">70%</div>
+                    <div class="stat-label">Min Confidence Threshold</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">500+</div>
+                    <div class="stat-label">Components (V3 Target)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">99.9%</div>
+                    <div class="stat-label">Target Uptime</div>
+                </div>
+            </div>
+            
+            <!-- Legend -->
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-box" style="background: #3B82F6;"></div>
+                    <span>Ingestion</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box" style="background: #8B5CF6;"></div>
+                    <span>Processing</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box" style="background: #10B981;"></div>
+                    <span>Output</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box" style="background: #F59E0B;"></div>
+                    <span>Monitoring Tools</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box" style="background: #EF4444;"></div>
+                    <span>Alerting Systems</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box" style="background: #06B6D4;"></div>
+                    <span>Visualization</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

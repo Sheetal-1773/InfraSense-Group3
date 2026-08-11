@@ -1,0 +1,146 @@
+# generated: 2026-08-10T00:00:00.000Z
+# last_updated: 2026-08-10T00:00:00.000Z
+# project: group_3
+# project_key: NOKEY
+# tracking_system: file-system
+# story_location: C:\group_3\_bmad-output\implementation-artifacts
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+#
+# Epic Status Transitions:
+#   - backlog → in-progress: Automatically when first story is created (via create-story)
+#   - in-progress → done: Manually when all stories reach 'done' status
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created in stories folder
+#   - in-progress: Developer actively working on implementation
+#   - review: Ready for code review (via Dev's code-review workflow)
+#   - done: Story completed
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+#
+# Action Item Status:
+#   - open: Committed during a retrospective, not yet addressed
+#   - in-progress: Actively being worked on
+#   - done: Completed
+#
+# WORKFLOW NOTES:
+# ===============
+# - Epic transitions to 'in-progress' automatically when first story is created
+# - Stories can be worked in parallel if team capacity allows
+# - Developer typically creates next story after previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
+# - Retrospective appends its action items to action_items; sprint-status surfaces open ones
+
+generated: 2026-08-10T00:00:00.000Z
+last_updated: 2026-08-10T00:00:00.000Z
+project: group_3
+project_key: NOKEY
+tracking_system: file-system
+story_location: C:\group_3\_bmad-output\implementation-artifacts
+
+development_status:
+  # ============================================
+  # PHASE 1: FRONTEND FIRST (with Mock Data)
+  # ============================================
+
+  # Epic 1: Frontend Foundation
+  epic-1: done
+  1-1-react-project-setup: done
+  1-2-navigation-layout-sidebar: done
+  1-3-theme-design-tokens: done
+  1-4-reusable-components-library: done
+  1-5-api-service-layer-mock-data: done
+  epic-1-retrospective: optional
+
+  # Epic 2: Dashboard & Health Visualization
+  epic-2: done
+  2-1-main-dashboard-overview: done
+  2-2-health-score-cards: done
+  2-3-component-grid-list: done
+  2-4-health-trend-charts: done
+  2-5-filtering-sorting-pagination: done
+  epic-2-retrospective: optional
+
+  # Epic 3: Alert & Prediction Experience
+  epic-3: done
+  3-1-alert-list-view: done
+  3-2-predictive-alert-card: done
+  3-3-reactive-alert-card: done
+  3-4-alert-detail-page-time-to-breach: done
+  3-5-confidence-interval-display: done
+  3-6-alert-notification-toast: done
+  epic-3-retrospective: optional
+
+  # Epic 4: Explanation & Recommendations
+  epic-4: done
+  4-1-prediction-explanation-panel: done
+  4-2-contributing-factors-display: done
+  4-3-historical-pattern-matching: done
+  4-4-recommended-actions-panel: done
+  4-5-runbook-link-integration: done
+  4-6-acknowledge-dismiss-actions: done
+  epic-4-retrospective: optional
+
+  # Epic 5: Correlation & Blast Radius
+  epic-5: done
+  5-1-correlation-grouping-view: done
+  5-2-root-cause-ranking: done
+  5-3-blast-radius-visualization: done
+  5-4-dependency-topology-graph: done
+  5-5-business-impact-context: done
+  5-6-manual-correlation-tagging: done
+  epic-5-retrospective: optional
+
+  # ============================================
+  # PHASE 2: BACKEND
+  # ============================================
+
+  # Epic 6: Backend & Telemetry
+  epic-6: backlog
+  6-1-fastapi-project-setup: backlog
+  6-2-postgresql-schema-migrations: backlog
+  6-3-component-crud-api: backlog
+  6-4-metrics-ingestion-api: backlog
+  6-5-health-score-calculation-service: backlog
+  6-6-open-telemetry-collector-setup: backlog
+  6-7-prometheus-remote-write-endpoint: backlog
+  epic-6-retrospective: optional
+
+  # ============================================
+  # PHASE 3: PREDICTIVE ENGINE
+  # ============================================
+
+  # Epic 7: Analytics & Prediction Engine
+  epic-7: backlog
+  7-1-static-threshold-detection: backlog
+  7-2-dynamic-baseline-detection: backlog
+  7-3-time-to-breach-calculation: backlog
+  7-4-confidence-interval-engine: backlog
+  7-5-prediction-accuracy-tracking: backlog
+  7-6-anomaly-alert-generation: backlog
+  epic-7-retrospective: optional
+
+  # ============================================
+  # PHASE 4: PRODUCTION
+  # ============================================
+
+  # Epic 8: Integration, Security & Production
+  epic-8: backlog
+  8-1-email-notification-service: backlog
+  8-2-webhook-integration-pagerduty: backlog
+  8-3-in-app-notification-real-time: backlog
+  8-4-alert-deduplication-escalation: backlog
+  8-5-tls-encryption: backlog
+  8-6-rbac-user-roles: backlog
+  8-7-audit-logging: backlog
+  8-8-grafana-integration: backlog
+  epic-8-retrospective: optional

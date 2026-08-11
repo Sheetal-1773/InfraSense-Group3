@@ -1,0 +1,43 @@
+# BMad installation folders (exclude)
+.agents/
+.opencode/
+docs/
+_bmad/
+
+# Project dependencies
+health-analytics-platform/node_modules/
+health-analytics-platform/package-lock.json
+
+# Build output
+health-analytics-platform/dist/
+health-analytics-platform/build/
+
+# Environment files
+health-analytics-platform/.env
+health-analytics-platform/.env.local
+health-analytics-platform/.env.*.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Testing
+coverage/
+
+# Cache
+.cache/
+.vite/
+
+# Temporary
+*.tmp
+*.temp

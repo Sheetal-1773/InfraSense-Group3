@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Analytics Platform - Architecture Overview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #0F172A 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #F1F5F9;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            font-size: 36px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+        .header p {
+            color: #94A3B8;
+            font-size: 16px;
+        }
+        
+        /* Main Flow Diagram */
+        .flow-section {
+            background: #1E293B;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: #F1F5F9;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(180deg, #3B82F6, #8B5CF6);
+            border-radius: 2px;
+        }
+        
+        /* Flow Boxes */
+        .flow-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .flow-box {
+            background: #0F172A;
+            border-radius: 12px;
+            padding: 16px 20px;
+            text-align: center;
+            min-width: 140px;
+            border: 1px solid #334155;
+            transition: all 0.3s;
+        }
+        .flow-box:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .flow-box .icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        .flow-box .label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #F1F5F9;
+        }
+        .flow-box .tech {
+            font-size: 10px;
+            color: #64748B;
+            margin-top: 4px;
+        }
+        
+        .flow-arrow {
+            color: #475569;
+            font-size: 24px;
+        }
+        
+        /* Data Flow */
+        .data-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+            padding: 16px;
+            background: #0F172A;
+            border-radius: 10px;
+            flex-wrap: wrap;
+        }
+        .data-flow .label {
+            font-size: 12px;
+            color: #64748B;
+            min-width: 100px;
+        }
+        .data-flow .format {
+            background: #1E293B;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            color: #8B5CF6;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        /* Tech Stack Grid */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        
+        .tech-card {
+            background: #0F172A;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #334155;
+        }
+        .tech-card .category {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #64748B;
+            margin-bottom: 12px;
+        }
+        .tech-card .stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .tech-card .stack-item {
+            background: #1E293B;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #F1F5F9;
+        }
+        
+        /* Pipeline Flow */
+        .pipeline {
+            display: flex;
+            gap: 8px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .pipeline-stage {
+            background: #0F172A;
+            border-radius: 10px;
+            padding: 16px;
+            min-width: 150px;
+            text-align: center;
+            border: 1px solid #334155;
+        }
+        .pipeline-stage .stage-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: #F1F5F9;
+            margin-bottom: 8px;
+        }
+        .pipeline-stage .stage-items {
+            font-size: 10px;
+            color: #94A3B8;
+        }
+        
+        /* Legend */
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #94A3B8;
+        }
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        
+        /* Stats */
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #334155;
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #3B82F6;
+        }
+        .stat-label {
+            font-size: 11px;
+            color: #64748B;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Health Analytics Platform</h1>
+            <p>IT Early Warning System - Architecture Overview</p>
+        </div>
+        
+        <!-- Main Flow -->
+        <div class="flow-section">
+            <div class="section-title">Data Flow: From Infrastructure to Insight</div>
+            
+            <div class="flow-container">
+                <div class="flow-box">
+                    <div class="icon">🖥️</div>
+                    <div class="label">Infrastructure</div>
+                    <div class="tech">Servers, DBs, Network</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                
+                <div class="flow-box">
+                    <div class="icon">📡</div>
+                    <div class="label">Collectors</div>
+                    <div class="tech">OpenTelemetry</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                
+                <div class="flow-box">
+                    <div class="icon">⚙️</div>
+                    <div class="label">Processing</div>
+                    <div class="tech">FastAPI + Python</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                
+                <div class="flow-box">
+                    <div class="icon">🧠</div>
+                    <div class="label">Prediction</div>
+                    <div class="tech">ML Models</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                
+                <div class="flow-box">
+                    <div class="icon">🔔</div>
+                    <div class="label">Alerting</div>
+                    <div class="tech">Email/Webhooks</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                
+                <div class="flow-box">
+                    <div class="icon">📊</div>
+                    <div class="label">Dashboard</div>
+                    <div class="tech">React + Grafana</div>
+                </div>
+            </div>
+            
+            <div class="data-flow">
+                <span class="label">Data Format:</span>
+                <span class="format">OTLP/HTTP</span>
+                <span class="format">JSON</span>
+                <span class="format">Time-Series</span>
+                <span class="format">JSON</span>
+                <span class="format">HTML/JSON</span>
+            </div>
+        </div>
+        
+        <!-- Tech Stack -->
+        <div class="flow-section">
+            <div class="section-title">Technology Stack</div>
+            
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <div class="category">Frontend</div>
+                    <div class="stack">
+                        <span class="stack-item">React 18</span>
+                        <span class="stack-item">TypeScript</span>
+                        <span class="stack-item">Grafana</span>
+                    </div>
+                </div>
+                
+                <div class="tech-card">
+                    <div class="category">Backend</div>
+                    <div class="stack">
+                        <span class="stack-item">FastAPI</span>
+                        <span class="stack-item">Python 3.11</span>
+                        <span class="stack-item">REST API</span>
+                    </div>
+                </div>
+                
+                <div class="tech-card">
+                    <div class="category">Database</div>
+                    <div class="stack">
+                        <span class="stack-item">PostgreSQL</span>
+                        <span class="stack-item">InfluxDB</span>
+                        <span class="stack-item">Redis</span>
+                    </div>
+                </div>
+                
+                <div class="tech-card">
+                    <div class="category">Telemetry</div>
+                    <div class="stack">
+                        <span class="stack-item">OpenTelemetry</span>
+                        <span class="stack-item">Prometheus</span>
+                        <span class="stack-item">Collectors</span>
+                    </div>
+                </div>
+                
+                <div class="tech-card">
+                    <div class="category">ML/Analytics</div>
+                    <div class="stack">
+                        <span class="stack-item">pandas</span>
+                        <span class="stack-item">statsmodels</span>
+                        <span class="stack-item">Prophet</span>
+                    </div>
+                </div>
+                
+                <div class="tech-card">
+                    <div class="category">Infrastructure</div>
+                    <div class="stack">
+                        <span class="stack-item">Kubernetes</span>
+                        <span class="stack-item">Docker</span>
+                        <span class="stack-item">Kafka</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Prediction Pipeline -->
+        <div class="flow-section">
+            <div class="section-title">Prediction Engine Pipeline</div>
+            
+            <div class="pipeline">
+                <div class="pipeline-stage">
+                    <div class="stage-name">1. Static Threshold</div>
+                    <div class="stage-items">CPU > 90%<br>Disk > 95%</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                
+                <div class="pipeline-stage">
+                    <div class="stage-name">2. Dynamic Threshold</div>
+                    <div class="stage-items">Historical baseline<br>Adaptive limits</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                
+                <div class="pipeline-stage">
+                    <div class="stage-name">3. Trend Analysis</div>
+                    <div class="stage-items">Linear regression<br>Growth rate</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                
+                <div class="pipeline-stage">
+                    <div class="stage-name">4. ML Models</div>
+                    <div class="stage-items">Time-series forecasting<br>Pattern matching</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                
+                <div class="pipeline-stage">
+                    <div class="stage-name">5. Output</div>
+                    <div class="stage-items">Time-to-breach<br>Confidence %<br>Explanation</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Integration Points -->
+        <div class="flow-section">
+            <div class="section-title">Integration Points</div>
+            
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <div class="category">Monitoring Tools (Read)</div>
+                    <div class="stack">
+                        <span class="stack-item">Datadog</span>
+                        <span class="stack-item">Dynatrace</span>
+                        <span class="stack-item">Splunk</span>
+                        <span class="stack-item">Prometheus</span>
+                    </div>
+                </div>
+                
+                <div class="tech-card">
+                    <div class="category">Alerting (Write)</div>
+                    <div class="stack">
+                        <span class="stack-item">PagerDuty</span>
+                        <span class="stack-item">OpsGenie</span>
+                        <span class="stack-item">ServiceNow</span>
+                        <span class="stack-item">Email</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Stats -->
+        <div class="stats-row">
+            <div class="stat">
+                <div class="stat-value">&lt;2%</div>
+                <div class="stat-label">Collector CPU</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">70%+</div>
+                <div class="stat-label">Prediction Accuracy</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">2-6h</div>
+                <div class="stat-label">Warning Lead Time</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">99.9%</div>
+                <div class="stat-label">Uptime Target</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">500+</div>
+                <div class="stat-label">Components</div>
+            </div>
+        </div>
+        
+        <!-- Legend -->
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-dot" style="background: #3B82F6;"></div>
+                <span>Ingestion</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background: #8B5CF6;"></div>
+                <span>Processing</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background: #10B981;"></div>
+                <span>Output</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background: #F59E0B;"></div>
+                <span>External Systems</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

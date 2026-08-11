@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Analytics Platform - System Context</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+            min-height: 100vh;
+            padding: 40px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #F1F5F9;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+        .subtitle {
+            color: #94A3B8;
+            font-size: 14px;
+            margin-bottom: 32px;
+        }
+        .diagram-card {
+            background: #1E293B;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        .mermaid {
+            display: flex;
+            justify-content: center;
+        }
+        .mermaid svg {
+            max-width: 100%;
+            height: auto;
+        }
+        .legend {
+            display: flex;
+            gap: 24px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #94A3B8;
+            font-size: 13px;
+        }
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+        .ingestion { background: #3B82F6; }
+        .processing { background: #8B5CF6; }
+        .output { background: #10B981; }
+        .external { background: #F59E0B; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Health Analytics Platform</h1>
+        <p class="subtitle">System Context Diagram — Architecture Overview</p>
+        
+        <div class="diagram-card">
+            <div class="mermaid">
+                flowchart TB
+                    subgraph "Monitored Infrastructure"
+                        direction LR
+                        S[Servers]
+                        DB[Databases]
+                        NW[Networks]
+                        APP[Applications]
+                    end
+
+                    subgraph "Health Analytics Platform"
+                        subgraph "Ingestion Layer"
+                            direction TB
+                            OT[OpenTelemetry Collector]
+                            PW[Prometheus Remote-Write]
+                        end
+
+                        subgraph "Processing Layer" 
+                            direction TB
+                            TE[Telemetry Engine]
+                            HS[Health Scoring]
+                            PE[Prediction Engine]
+                            CE[Correlation Engine]
+                            BR[Blast Radius]
+                        end
+
+                        subgraph "Output Layer"
+                            direction TB
+                            AS[Alert Service]
+                            NS[Notification Service]
+                            API[API Gateway]
+                            DB[(PostgreSQL)]
+                        end
+                    end
+
+                    S --> OT
+                    DB --> OT
+                    NW --> OT
+                    APP --> OT
+                    S --> PW
+                    DB --> PW
+                    NW --> PW
+                    APP --> PW
+
+                    OT --> TE
+                    PW --> TE
+                    TE --> HS
+                    TE --> PE
+                    HS --> DB
+                    PE --> CE
+                    CE --> BR
+                    BR --> AS
+                    AS --> NS
+                    AS --> API
+                    NS --> EMAIL[Email]
+                    NS --> WEB[Webhooks]
+                    API --> DASH[Dashboard]
+
+                    classDef ingestion fill:#3B82F6,stroke:#2563EB,color:#fff;
+                    classDef processing fill:#8B5CF6,stroke:#7C3AED,color:#fff;
+                    classDef output fill:#10B981,stroke:#059669,color:#fff;
+                    classDef external fill:#F59E0B,stroke:#D97706,color:#fff;
+                    classDef storage fill:#1E293B,stroke:#475569,color:#94A3B8;
+                    
+                    class OT,PW ingestion;
+                    class TE,HS,PE,CE,BR processing;
+                    class AS,NS,API output;
+                    class DB storage;
+            </div>
+            
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color ingestion"></div>
+                    <span>Ingestion Layer</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color processing"></div>
+                    <span>Processing Layer</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color output"></div>
+                    <span>Output Layer</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color external"></div>
+                    <span>External Systems</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+    </script>
+</body>
+</html>

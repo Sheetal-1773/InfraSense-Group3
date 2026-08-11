@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Analytics Platform - Data Model</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0F172A;
+            min-height: 100vh;
+            padding: 40px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #F1F5F9;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+        .subtitle {
+            color: #94A3B8;
+            font-size: 16px;
+            margin-bottom: 40px;
+        }
+        
+        .diagram-card {
+            background: #1E293B;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+        }
+        
+        .entity-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        
+        .entity {
+            background: #0F172A;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #334155;
+        }
+        
+        .entity-header {
+            padding: 16px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #F1F5F9;
+            border-bottom: 1px solid #334155;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .entity-header::before {
+            content: '';
+            width: 10px;
+            height: 10px;
+            border-radius: 3px;
+        }
+        
+        .entity-components .entity-header::before { background: #3B82F6; }
+        .entity-metrics .entity-header::before { background: #8B5CF6; }
+        .entity-predictions .entity-header::before { background: #F59E0B; }
+        .entity-alerts .entity-header::before { background: #EF4444; }
+        .entity-healthscores .entity-header::before { background: #10B981; }
+        .entity-recommendations .entity-header::before { background: #06B6D4; }
+        
+        .entity-fields {
+            padding: 16px 20px;
+        }
+        
+        .field {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #1E293B;
+            font-size: 13px;
+        }
+        
+        .field:last-child {
+            border-bottom: none;
+        }
+        
+        .field-name {
+            color: #94A3B8;
+        }
+        
+        .field-type {
+            color: #64748B;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+        }
+        
+        .pk {
+            color: #F59E0B;
+            font-size: 10px;
+            margin-left: 4px;
+        }
+        
+        .fk {
+            color: #8B5CF6;
+            font-size: 10px;
+            margin-left: 4px;
+        }
+        
+        /* Relationships */
+        .relationships {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 32px;
+            padding-top: 32px;
+            border-top: 1px solid #334155;
+        }
+        
+        .relationship {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #64748B;
+            font-size: 12px;
+        }
+        
+        .relationship-line {
+            width: 40px;
+            height: 2px;
+            background: #334155;
+            position: relative;
+        }
+        
+        .relationship-line::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: -4px;
+            border: 5px solid transparent;
+            border-left-color: #334155;
+        }
+        
+        /* Legend */
+        .legend {
+            display: flex;
+            gap: 24px;
+            margin-top: 32px;
+            justify-content: center;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #94A3B8;
+            font-size: 12px;
+        }
+        
+        .legend-icon {
+            width: 8px;
+            height: 8px;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Health Analytics Platform</h1>
+        <p class="subtitle">Data Model — Entity Relationship Diagram</p>
+        
+        <div class="diagram-card">
+            <div class="entity-grid">
+                <!-- Components -->
+                <div class="entity entity-components">
+                    <div class="entity-header">Components</div>
+                    <div class="entity-fields">
+                        <div class="field">
+                            <span class="field-name">id</span>
+                            <span class="field-type">UUID<span class="pk">PK</span></span>
+                        </div>
+                        <div class="field">
+                            <span class="field-name">name</span>
+                            <span class="field-type">string</span>
+                        </div>
+                        <div class="field">
+                            <span class="field-name">type</span>
+                            <span class="field-type">enum</span>
+                        </div>
+                        <div class="field">
+                            <span class="field-name">environment</span>
+                            <span class="field-type">string</span>
+                        </div>
+                        <div class="field">
+                            <span class="field-name">health_score</span>
+                            <span class="field-type">int</span>
+                        </div>
+                        <div class="field">
+                            <span class="field-name">last_updated</span>
+                            <span class="field-type">timestamp</span>
+                        </div>
+                        <div class="field">
+                            <span class="field-name">metadata</span>
+                            <span class="field-type">JSON</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Metrics -->
+                <div class="entity entity-metrics">
+                    <div class="entity-header">Metrics</div>
+                    <div class="entity-fields">
+                        <div class="field">
+                            <span class="field-name">id</span>
+                            <span class="field-type">UUID<span class="pk">PK</span></span>
+                        </div>
+                        <div class="field">
+                            <span class="field-name">component_id</span>
+                            <span class="field-type">UUID<span class="fk">FK</span></span>
+                        </div>
+                        <div class="field">
+                            <span class="field-name">metric_name</span>
+                            <span class="field-type">string</span>
+                        </div>
+                        <div class="field">
+                            <span class="field-name">value</span>
+                            <span class="field-type">float</span>
+                        </div>
+                        <div class="field">
+                            <span class="field-name">timestamp</span>
+                            <span class="field-type">timestamp</span>
+                        </div>
+                        <div class="field">
+                            <span class="field-name">labels</span>
+                            <span class="field-type">JSON</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- HealthScores -->
+                <div class="entity entity-healthscores">
+                    <div class="entity-header">HealthScores</div>
+                    <div class="entity-fields">
+                        <div class="field">
+                            <span class="field-name">id</span>
+                            <span class="field-type">UUID<span class="pk">PK</span></span>
+                        </div>
+                        <div class="field">
+                            <span class="field-name">component_id</span>
+                            <span class="field-type">UUID<span class="fk">FK</span></span>
+                        </div>
+                        <div class="field">
+                            <span class="field-name">score</span>
+                            <span class="field-type">int</span>
+                        </div>
+                        <div class="field">
+                            <span class="field-name">factors</span>
+                            <span class="field-type">JSON</span>
+                        </div>
+                        <div class="field">
+                            <span class="field-name">timestamp</span>
+                            <span class="field-type">timestamp</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Predictions -->
+                <div class="entity entity-predictions">
+                    <div class="entity-header">Predictions</div>
+                    <div class="entity-fields">
+                        <div class="field">
+                            <span class="field-name">id</span>
+                            <span class="field-type">UUID<span class="pk">PK</span></span>
+                        </div>
+                        <div class="field">
+                            <span class="field-name">component_id</span>
+                            <span class="field-type">UUID<span class="fk">FK</span></span>
+                        </div>
+                        <div class="field">
+                            <span class="field-name">metric_name</span>
+                            <span class="field-type">string</span>
+                        </div>
+                        <div class="field">
+                            <span class="field-name">time_to_breach</span>
+                            <span class="field-type">int</span>
+                        </div>
+                        <div class="field">
+                            <span class="field-name">confidence</span>
+                            <span class="field-type">int</span>
+                        </div>
+                        <div class="field">
+                            <span class="field-name">model_used</span>
+                            <span class="field-type">string</span>
+                        </div>
+                        <div class="field">
+                            <span class="field-name">explanation</span>
+                            <span class="field-type">string</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Alerts -->
+                <div class="entity entity-alerts">
+                    <div class="entity-header">Alerts</div>
+                    <div class="entity-fields">
+                        <div class="field">
+                            <span class="field-name">id</span>
+                            <span class="field-type">UUID<span class="pk">PK</span></span>
+                        </div>
+                        <div class="field">
+                            <span class="field-name">component_id</span>
+                            <span class="field-type">UUID<span class="fk">FK</span></span>
+                        </div>
+                        <div class="field">
+                            <span class="field-name">severity</span>
+                            <span class="field-type">enum</span>
+                        </div>
+                        <div class="field">
+                            <span class="field-name">title</span>
+                            <span class="field-type">string</span>
+                        </div>
+                        <div class="field">
+                            <span class="field-name">message</span>
+                            <span class="field-type">string</span>
+                        </div>
+                        <div class="field">
+                            <span class="field-name">time_to_breach</span>
+                            <span class="field-type">string</span>
+                        </div>
+                        <div class="field">
+                            <span class="field-name">confidence</span>
+                            <span class="field-type">string</span>
+                        </div>
+                        <div class="field">
+                            <span class="field-name">recommended_action</span>
+                            <span class="field-type">string</span>
+                        </div>
+                        <div class="field">
+                            <span class="field-name">status</span>
+                            <span class="field-type">enum</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recommendations -->
+                <div class="entity entity-recommendations">
+                    <div class="entity-header">Recommendations</div>
+                    <div class="entity-fields">
+                        <div class="field">
+                            <span class="field-name">id</span>
+                            <span class="field-type">UUID<span class="pk">PK</span></span>
+                        </div>
+                        <div class="field">
+                            <span class="field-name">alert_id</span>
+                            <span class="field-type">UUID<span class="fk">FK</span></span>
+                        </div>
+                        <div class="field">
+                            <span class="field-name">action</span>
+                            <span class="field-type">string</span>
+                        </div>
+                        <div class="field">
+                            <span class="field-name">runbook_link</span>
+                            <span class="field-type">string</span>
+                        </div>
+                        <div class="field">
+                            <span class="field-name">priority</span>
+                            <span class="field-type">int</span>
+                        </div>
+                        <div class="field">
+                            <span class="field-name">executed</span>
+                            <span class="field-type">boolean</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Relationships -->
+            <div class="relationships">
+                <div class="relationship">
+                    <span>Components</span>
+                    <div class="relationship-line"></div>
+                    <span>1:N Metrics</span>
+                </div>
+                <div class="relationship">
+                    <span>Components</span>
+                    <div class="relationship-line"></div>
+                    <span>1:N Predictions</span>
+                </div>
+                <div class="relationship">
+                    <span>Components</span>
+                    <div class="relationship-line"></div>
+                    <span>1:N Alerts</span>
+                </div>
+                <div class="relationship">
+                    <span>Alerts</span>
+                    <div class="relationship-line"></div>
+                    <span>1:N Recommendations</span>
+                </div>
+            </div>
+            
+            <!-- Legend -->
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-icon" style="background: #F59E0B;"></div>
+                    <span>PK = Primary Key</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-icon" style="background: #8B5CF6;"></div>
+                    <span>FK = Foreign Key</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
