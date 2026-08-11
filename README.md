@@ -2,64 +2,87 @@
 
 ### Predict. Correlate. Prevent. Perform.
 
-InfraSense is an IT early-warning and health analytics platform designed to help IT teams identify infrastructure risks before they become business-impacting failures.
+InfraSense is an **IT early-warning and health analytics platform** designed to predict infrastructure failures before they happen.
 
-Instead of only monitoring the current health of infrastructure, InfraSense analyzes and correlates signals across **Network, Applications, Databases, and Servers** to identify hidden patterns, predict potential failures, and provide actionable insights.
+Instead of simply monitoring the current state of IT infrastructure, InfraSense analyzes health, trends, anomalies, and relationships across infrastructure components to provide **actionable early warnings** before issues become outages.
 
-## 🚀 Key Capabilities
+It acts as an **intelligence layer over existing monitoring tools**, helping IT teams move from reactive firefighting to proactive risk management.
 
-- **Predictive Early Warning** – Identify potential infrastructure failures before they occur.
-- **Cross-Component Correlation** – Correlate signals across Network, Applications, Databases, and Servers to identify relationships and root causes.
-- **Overall Health Analytics** – Get a unified view of infrastructure health.
-- **Time-to-Breach** – Estimate how long before a monitored condition reaches a critical threshold.
-- **Business Impact Analysis** – Understand which services and business operations could be affected.
-- **Explainable Predictions** – Understand why a risk is being predicted.
-- **Actionable Recommendations** – Get recommended actions to prevent or reduce the impact of failures.
-- **Proactive Alerts** – Receive early warnings before issues become critical.
-
-## 🏗️ Components
-
-| Component | Purpose |
-|---|---|
-| 🌐 Network | Monitor network health, performance, and anomalies |
-| ⚙️ Applications | Identify application performance and availability risks |
-| 🗄️ Databases | Detect database health and performance issues |
-| 🖥️ Servers | Analyze server capacity, performance, and health |
+---
 
 ## 🎯 Core Promise
 
-> **Predict the problem. Explain why. Correlate the signals. Show the impact. Recommend the action.**
+> **Predict the problem. Alert early enough to prevent it. Explain why. Show the impact. Recommend the action.**
 
-InfraSense helps organizations move from **reactive monitoring to proactive risk management**, reducing downtime and improving infrastructure reliability.
+---
 
-## 🛠️ Technology
+## 🚨 The Problem
 
-- React
-- Vite
-- JavaScript
-- HTML5
-- CSS3
-- Responsive Dashboard UI
-- Data Visualization
+Traditional monitoring tools primarily tell IT teams **what is happening now**.
 
-## 📊 Dashboard
+InfraSense focuses on **what is likely to happen next**.
 
-The InfraSense dashboard provides:
+### Common IT Operations Challenges
 
-- Overall Infrastructure Health
-- Component-wise Health Distribution
-- Predictive Early Warnings
-- Infrastructure Alerts
-- Cross-component Correlation
-- Risk & Impact Analysis
-- Recommended Actions
+| Challenge | Traditional Approach |
+|---|---|
+| Too many alerts | Multiple alerts for one emerging incident |
+| Disconnected data | Issues are analyzed independently |
+| Reactive notifications | Teams respond after users experience problems |
+| Last-minute alerts | Warnings arrive when failure is already near |
+| No prediction | Tools detect what happened, not what will happen |
 
-## 🌐 Live Demo
+### The Shift
 
-**[InfraSense](https://infra-sense-group3.vercel.app/)**
+**Current State**
 
-## 👥 Project
+> "Something failed. Go fix it."
 
-**InfraSense – Group 3**
+**With InfraSense**
 
-An IT Health Analytics and Predictive Early Warning Platform.
+> "Something is trending toward failure. Here's why, when it may happen, what it could affect, and what you should do."
+
+---
+
+## 🚀 Key Capabilities
+
+### 1. Health Score
+
+Provides a **0–100 health score** for infrastructure components, giving teams a quick view of overall system health.
+
+### 2. Predictive Early Warning
+
+Identifies trends and anomalies that indicate a potential future failure rather than waiting for a threshold to be breached.
+
+### 3. Time-to-Breach
+
+Estimates **how long until a metric is expected to cross its threshold**, along with a confidence interval.
+
+Example:
+
+> **Time-to-Breach: ~8 hours**
+
+### 4. Explainability
+
+Every prediction should answer:
+
+> **"Why is this predicted to fail?"**
+
+Example:
+
+> **91% confidence because CPU increased 18% over the last 2 hours.**
+
+### 5. Correlation
+
+Connects related signals across infrastructure layers to identify relationships that may not be visible when looking at individual alerts.
+
+Example:
+
+```text
+Server CPU ↑
+      ↓
+Database Latency ↑
+      ↓
+Application Errors ↑
+      ↓
+Potential Payment Failure
