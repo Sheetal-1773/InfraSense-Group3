@@ -1,0 +1,83 @@
+# Minimal Monitoring Setup for Existing InfraSense Project
+# This file adds monitoring to your existing docker-compose.yml
+
+services:
+  # Add these to your existing services section
+  
+  # Prometheus - Central metrics collector
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    depends_on:
+      - node-exporter
+      - postgres-exporter
+    networks:
+      - default
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:9090/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Node Exporter - Server metrics
+  node-exporter:
+    image: prom/node-exporter:latest
+    ports:
+      - "9100:9100"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+    networks:
+      - default
+
+  # PostgreSQL Exporter - Database metrics
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter:latest
+    environment:
+      DATA_SOURCE_NAME: "postgresql://infrasense:infrasense@postgres:5432/infrasense?sslmode=disable"
+    ports:
+      - "9187:9187"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - default
+
+  # Blackbox Exporter - Network monitoring
+  blackbox-exporter:
+    image: prom/blackbox-exporter:latest
+    ports:
+      - "9115:9115"
+    volumes:
+      - ./monitoring/blackbox.yml:/etc/blackbox_exporter/config.yml
+    command:
+      - '--config.file=/etc/blackbox_exporter/config.yml'
+    networks:
+      - default
+
+  # Update your backend service to use real data mode
+  backend:
+    environment:
+      - DATA_MODE=real
+      - CLOUD_PROVIDER=local
+      - SIMULATOR_ENABLED=false
+      - PROMETHEUS_URL=http://prometheus:9090
+
+# Add these volumes to your existing volumes section
+volumes:
+  prometheus_data:
+  postgres_data:
+
+# Add this to your existing networks section
+networks:
+  default:
+    driver: bridge

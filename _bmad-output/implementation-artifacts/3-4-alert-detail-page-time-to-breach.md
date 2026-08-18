@@ -1,11 +1,13 @@
 ---
 baseline_commit: NO_VCS
+status: complete
+updated: 2026-08-18
 ---
 
 # Story 3.4: Alert Detail Page with Time-to-Breach
 
 **Epic:** 3 - Alert & Prediction Experience  
-**Status:** ready-for-dev  
+**Status:** complete  
 **Story ID:** 3.4
 
 ## Story

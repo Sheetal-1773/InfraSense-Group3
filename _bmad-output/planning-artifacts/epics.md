@@ -1,11 +1,14 @@
 ---
+status: complete
+updated: 2026-08-18
 stepsCompleted: ["step-01-validate-prerequisites", "step-02-design-epics", "step-03-create-stories", "step-04-final-validation"]
 inputDocuments:
   - "C:\group_3\_bmad-output\planning-artifacts\prds\prd-group_3-2026-08-10\prd.md"
   - "C:\group_3\_bmad-output\planning-artifacts\architecture\architecture-health-analytics-platform-2026-08-10\ARCHITECTURE-SPINE.md"
+  - "C:\group_3\_bmad-output\planning-artifacts\research\domain.md"
 ---
 
-# group_3 - Epic Breakdown
+# group_3 - Epic Breakdown (COMPLETE)
 
 ## Overview
 
@@ -113,13 +116,35 @@ This document provides the complete epic and story breakdown for group_3, decomp
 
 ### Additional Requirements
 
-- **Starter Template:** MVP stack with React frontend, FastAPI backend, PostgreSQL database, OpenTelemetry Collector, and pandas/statsmodels for analytics
+- **Starter Template:** MVP stack with React frontend, FastAPI backend, PostgreSQL + TimescaleDB database, OpenTelemetry Collector, and pandas/statsmodels for analytics
 - **Prediction Model Hierarchy:** Must follow static → dynamic → trend → ML progression
 - **API Protocol:** JSON over HTTP/HTTPS for REST; gRPC internally
 - **Collector Overhead:** <2% CPU, <100MB RAM
 - **Overlay Intelligence:** Platform operates as overlay on existing monitoring tools (read-only)
 - **Recommendation-Only Remediation:** No auto-remediation, humans always decide
 - **Data Model:** Components, Metrics, HealthScores, Predictions, Alerts, Recommendations tables defined
+
+**Data Source Integration (FR-DS):**
+- FR-DS-01: Platform shall support mock SolarWinds API for development and testing
+- FR-DS-02: Platform shall provide data-source abstraction layer for future integrations
+- FR-DS-03: Platform shall support replacing mock data sources with real integrations
+
+**Duration Threshold (FR-DUR):**
+- FR-DUR-01: Platform shall support duration-based threshold detection (metric exceeds threshold for X minutes)
+- FR-DUR-02: Platform shall allow configurable duration thresholds per metric
+
+**Overall Health (FR-OVERALL):**
+- FR-OVERALL-01: Platform shall calculate overall system health score from component health scores
+- FR-OVERALL-02: Platform shall display overall health with weighted aggregation by component criticality
+
+**Alert Classification (FR-CLASS):**
+- FR-CLASS-01: Platform shall classify alerts as predictive (pre-breach) or reactive (post-breach)
+- FR-CLASS-02: Platform shall prioritize predictive alerts for early intervention
+
+**Backend APIs (FR-API):**
+- FR-API-01: Platform shall expose REST APIs for all dashboard data needs
+- FR-API-02: Platform shall support component CRUD operations via API
+- FR-API-03: Platform shall support alert management (view, acknowledge, resolve) via API
 
 ### UX Design Requirements
 
@@ -168,38 +193,50 @@ FR-CORR-03: Epic 7 - Manual correlation tagging
 FR-BLAST-01: Epic 7 - Identify downstream impact of failure
 FR-BLAST-02: Epic 7 - Show business impact context
 FR-BLAST-03: Epic 7 - Dependency topology mapping
+FR-DS-01: Epic 1 - Mock SolarWinds API for development/testing
+FR-DS-02: Epic 1 - Data-source abstraction layer
+FR-DS-03: Epic 5 - Future SolarWinds integration roadmap
+FR-DUR-01: Epic 2 - Duration-based threshold detection
+FR-DUR-02: Epic 2 - Configurable duration thresholds per metric
+FR-OVERALL-01: Epic 2 - Overall system health score calculation
+FR-OVERALL-02: Epic 2 - Weighted aggregation by component criticality
+FR-CLASS-01: Epic 3 - Predictive vs reactive alert classification
+FR-CLASS-02: Epic 3 - Prioritize predictive alerts for early intervention
+FR-API-01: Epic 4 - REST APIs for all dashboard data needs
+FR-API-02: Epic 4 - Component CRUD operations via API
+FR-API-03: Epic 4 - Alert management via API
 
 ## Epic List
 
 ### Epic 1: Telemetry Ingestion & Storage
 Users can collect and store server metrics from their infrastructure.
-**FRs covered:** FR-TEL-01, FR-TEL-02, FR-TEL-03, FR-TEL-04, FR-TEL-05, FR-TEL-06, FR-TEL-07
+**FRs covered:** FR-TEL-01, FR-TEL-02, FR-TEL-03, FR-TEL-04, FR-TEL-05, FR-TEL-06, FR-TEL-07, FR-DS-01, FR-DS-02
 **Risk Mitigation:** Add data validation story to ensure <1% data loss requirement is tested and met
 
 ### Epic 2: Health Monitoring
 Users can view component health scores with color-coded status.
-**FRs covered:** FR-HSC-01, FR-HSC-02, FR-HSC-03
+**FRs covered:** FR-HSC-01, FR-HSC-02, FR-HSC-03, FR-DUR-01, FR-DUR-02, FR-OVERALL-01, FR-OVERALL-02
 
 ### Epic 3: Anomaly Detection & Alerting
 Users receive alerts when metrics exceed thresholds.
-**FRs covered:** FR-AND-01, FR-AND-02, FR-AND-03, FR-ALERT-01, FR-ALERT-02, FR-ALERT-03, FR-ALERT-04, FR-ALERT-05
+**FRs covered:** FR-AND-01, FR-AND-02, FR-AND-03, FR-ALERT-01, FR-ALERT-02, FR-ALERT-03, FR-ALERT-04, FR-ALERT-05, FR-CLASS-01, FR-CLASS-02
 **Risk Mitigation:** Prioritize FR-ALERT-04 (alert deduplication) in early story to prevent alert fatigue
 
 ### Epic 4: Visualization Dashboard
 Users can view health overview and historical trends via web dashboard.
-**FRs covered:** FR-VIZ-01, FR-VIZ-02, FR-VIZ-03, FR-VIZ-04
+**FRs covered:** FR-VIZ-01, FR-VIZ-02, FR-VIZ-03, FR-VIZ-04, FR-API-01, FR-API-02, FR-API-03
 **Risk Mitigation:** Plan for pagination and lazy loading from start to handle 500+ components within <3 second load time
 
-### Epic 5: Time-to-Breach Prediction (V2)
+### Epic 5: Time-to-Breach Prediction
 Users can see predicted time until threshold breach with confidence.
-**FRs covered:** FR-TTB-01, FR-TTB-02, FR-TTB-03, FR-TTB-04, FR-TTB-05, FR-TTB-06
+**FRs covered:** FR-TTB-01, FR-TTB-02, FR-TTB-03, FR-TTB-04, FR-TTB-05, FR-TTB-06, FR-DS-03
 **Risk Mitigation:** Include FR-TTB-03 (prediction accuracy tracking) in first story to validate >70% accuracy target early
 
-### Epic 6: Explainability & Recommendations (V2)
+### Epic 6: Explainability & Recommendations
 Users understand why predictions were made and what actions to take.
 **FRs covered:** FR-EXP-01, FR-EXP-02, FR-EXP-03, FR-EXP-04, FR-REC-01, FR-REC-02, FR-REC-03
 
-### Epic 7: Correlation & Blast Radius (V2)
+### Epic 7: Correlation & Blast Radius
 Users can see related issues and downstream impact.
 **FRs covered:** FR-CORR-01, FR-CORR-02, FR-CORR-03, FR-BLAST-01, FR-BLAST-02, FR-BLAST-03
 
@@ -294,6 +331,86 @@ Users can see related issues and downstream impact.
 **When** data loss exceeds 1% in any 5-minute window
 **Then** an alert is triggered for operations team
 
+### Story 1.6: PostgreSQL + TimescaleDB Setup
+
+**As a** Backend Developer,
+**I want** to set up PostgreSQL with TimescaleDB extension for time-series data,
+**So that** metrics are stored efficiently and queried quickly.
+
+**Acceptance Criteria:**
+
+**Given** PostgreSQL is installed
+**When** TimescaleDB extension is enabled
+**Then** the hypertable is created for metrics with time-based partitioning
+**And** queries for time-range data use the time index efficiently
+
+**Given** TimescaleDB is configured
+**When** 10,000 metrics per second are written
+**Then** write latency remains under 100ms
+**And** compression reduces storage by at least 80% for data older than 7 days
+
+**Given** the database is configured
+**When** retention policy is set to 90 days
+**Then** older data is automatically dropped per NFR-RELI-02
+
+### Story 1.7: Metric Catalogue Definition
+
+**As a** System Administrator,
+**I want** to define the complete metric catalogue for all component types,
+**So that** the platform knows what metrics to collect and how to interpret them.
+
+**Acceptance Criteria:**
+
+**Given** the metric catalogue is defined
+**When** the system starts
+**Then** it supports the following metric categories:
+- **Server:** CPU usage (%), memory usage (%), disk usage (%), disk I/O, network I/O
+- **Network:** bandwidth utilization (%), packet loss (%), latency (ms), error rate (%)
+- **Application:** response time (ms), request rate (req/s), error rate (%), active connections
+- **Database:** query latency (ms), connection pool usage (%), buffer cache hit ratio, disk I/O
+
+**Given** a metric is defined in the catalogue
+**When** it is received from a component
+**Then** the metric is validated against its expected type and range
+**And** invalid metrics are logged with details
+
+### Story 1.8: Mock SolarWinds Data Source Adapter
+
+**As a** Backend Developer,
+**I want** to create a mock SolarWinds API adapter,
+**So that** development and testing can proceed without a real SolarWinds instance.
+
+**Acceptance Criteria:**
+
+**Given** the mock SolarWinds adapter is implemented
+**When** the adapter is queried for component data
+**Then** it returns realistic mock data for servers, databases, networks, and applications
+
+**Given** the mock adapter is running
+**When** metrics are requested for a component
+**Then** the adapter returns time-series data with realistic patterns (trends, spikes, normal variation)
+
+**Given** the data-source abstraction layer exists
+**When** the mock adapter is swapped for a real SolarWinds adapter
+**Then** no changes are required to the downstream health scoring or prediction engines
+
+### Story 1.9: Data Source Abstraction Layer
+
+**As a** Backend Developer,
+**I want** to implement a data-source abstraction layer,
+**So that** different monitoring sources can be integrated without changing core logic.
+
+**Acceptance Criteria:**
+
+**Given** the abstraction layer is implemented
+**When** a new data source is added
+**Then** it implements the standard interface (fetch_components, fetch_metrics, fetch_health)
+**And** the core services consume data through the abstraction without knowing the source
+
+**Given** the abstraction layer exists
+**When** I query for components
+**Then** I get a normalized response regardless of the underlying data source
+
 ---
 
 ## Epic 2: Health Monitoring
@@ -356,6 +473,53 @@ Users can see related issues and downstream impact.
 **Given** threshold configuration
 **When** invalid values are provided (e.g., warning > critical)
 **Then** a 400 error is returned with validation message
+
+### Story 2.4: Duration-Based Threshold Detection
+
+**As a** SRE Engineer,
+**I want** to detect when a metric exceeds its threshold for a sustained duration,
+**So that** brief spikes don't trigger false alerts.
+
+**Acceptance Criteria:**
+
+**Given** a duration threshold is configured (e.g., CPU > 80% for 5 minutes)
+**When** the metric exceeds the threshold
+**Then** a timer starts tracking how long the threshold is exceeded
+
+**Given** a metric exceeds its threshold
+**When** the duration threshold is NOT met (e.g., only 2 minutes)
+**Then** no alert is generated
+
+**Given** a metric exceeds its threshold
+**When** the duration threshold IS met (e.g., 5+ minutes)
+**Then** an alert is generated with "duration" flag set
+**And** the alert includes the duration information
+
+**Given** a metric returns below threshold
+**When** the duration timer is active
+**Then** the timer is reset
+
+### Story 2.5: Overall System Health Aggregation
+
+**As a** On-call Engineer,
+**I want** to see the overall health of my infrastructure,
+**So that** I can quickly assess if the system is healthy.
+
+**Acceptance Criteria:**
+
+**Given** component health scores exist
+**When** overall system health is calculated
+**Then** it uses weighted aggregation based on component criticality
+**And** critical components have 2x weight compared to non-critical
+
+**Given** overall system health is calculated
+**When** any component is in critical state (score 0-30)
+**Then** overall health is capped at the lowest critical component score
+
+**Given** overall system health is displayed
+**When** a user views the dashboard
+**Then** they see a single health score for the entire infrastructure
+**And** the score is color-coded (green/yellow/red) like component scores
 
 ---
 
@@ -481,6 +645,33 @@ Users can see related issues and downstream impact.
 **When** the original recipient acknowledges the alert
 **Then** the escalation is cancelled
 
+### Story 3.8: Predictive vs Reactive Alert Classification
+
+**As a** SRE Engineer,
+**I want** alerts to be classified as predictive or reactive,
+**So that** I can prioritize early intervention on predictive alerts.
+
+**Acceptance Criteria:**
+
+**Given** a time-to-breach prediction exists
+**When** the prediction indicates breach in >0 minutes
+**Then** the generated alert is classified as "predictive"
+**And** the alert includes time-to-breach and confidence
+
+**Given** a metric has already exceeded its threshold
+**When** an alert is generated
+**Then** the alert is classified as "reactive"
+**And** the alert indicates the issue is already occurring
+
+**Given** alerts are displayed in the UI
+**When** I view the alert list
+**Then** predictive alerts are visually distinguished from reactive alerts
+**And** predictive alerts show a "warning" icon, reactive alerts show an "error" icon
+
+**Given** alert prioritization is applied
+**When** both predictive and reactive alerts exist
+**Then** predictive alerts are sorted first (earliest time-to-breach)
+
 ---
 
 ## Epic 4: Visualization Dashboard
@@ -560,6 +751,76 @@ Users can see related issues and downstream impact.
 **When** a user creates a Grafana dashboard
 **Then** they can query components, metrics, and health scores
 **And** the data refreshes according to Grafana's refresh interval
+
+### Story 4.5: Backend REST API Definitions
+
+**As a** Frontend Developer,
+**I want** to have well-defined REST APIs for all dashboard data,
+**So that** the React dashboard can consume data efficiently.
+
+**Acceptance Criteria:**
+
+**Given** the backend APIs are implemented
+**When** the frontend requests component data
+**Then** the following endpoints are available:
+- `GET /api/components` - List all components with health scores
+- `GET /api/components/{id}` - Get component details
+- `GET /api/components/{id}/metrics` - Get component metrics
+- `GET /api/components/{id}/health-history` - Get health score history
+- `GET /api/components/{id}/predictions` - Get predictions for component
+- `GET /api/components/{id}/alerts` - Get alerts for component
+
+**Given** the backend APIs are implemented
+**When** the frontend requests alert data
+**Then** the following endpoints are available:
+- `GET /api/alerts` - List all alerts (with filters: severity, status, type)
+- `GET /api/alerts/{id}` - Get alert details
+- `PATCH /api/alerts/{id}/acknowledge` - Acknowledge an alert
+- `PATCH /api/alerts/{id}/resolve` - Resolve an alert
+
+**Given** the backend APIs are implemented
+**When** the frontend requests prediction data
+**Then** the following endpoints are available:
+- `GET /api/predictions` - List all active predictions
+- `GET /api/predictions/{id}` - Get prediction details with explanation
+
+**Given** the backend APIs are implemented
+**When** the frontend requests system health
+**Then** the following endpoint is available:
+- `GET /api/health/overall` - Get overall system health score
+
+**Given** API responses are returned
+**When** the frontend consumes them
+**Then** all responses follow consistent JSON structure
+**And** pagination is supported for list endpoints (limit, offset)
+**And** response times are <500ms for typical queries
+
+### Story 4.6: Clickable Detail Views
+
+**As a** SRE Engineer,
+**I want** to click on components, predictions, and alerts to see details,
+**So that** I can investigate issues efficiently.
+
+**Acceptance Criteria:**
+
+**Given** the health overview is displayed
+**When** I click on a component card
+**Then** I navigate to the component detail view
+**And** the URL updates to /components/{id}
+
+**Given** a prediction is displayed
+**When** I click on the prediction
+**Then** I see the prediction detail panel
+**And** it shows: time-to-breach, confidence, contributing factors, recommended action
+
+**Given** an alert is displayed
+**When** I click on the alert
+**Then** I navigate to the alert detail view
+**And** it shows: full message, component link, time-to-breach, actions to take
+
+**Given** I'm in a detail view
+**When** I click the back button or breadcrumb
+**Then** I return to the previous view with my filters preserved
 
 ---
 
@@ -644,6 +905,36 @@ Users can see related issues and downstream impact.
 **Given** all previous methods have low confidence
 **When** ML model can provide a prediction
 **Then** ML model prediction is used
+
+### Story 5.5: SolarWinds Integration Roadmap
+
+**As a** Platform Architect,
+**I want** to have a clear roadmap for replacing mock data with real SolarWinds,
+**So that** the platform can integrate with customer SolarWinds instances.
+
+**Acceptance Criteria:**
+
+**Given** the mock SolarWinds adapter is in production
+**When** we need to integrate with a real SolarWinds instance
+**Then** the following steps are documented:
+1. Configure SolarWinds API credentials
+2. Map SolarWinds metrics to the platform's metric catalogue
+3. Implement the SolarWinds adapter following the abstraction interface
+4. Run parallel validation (mock vs real) for 7 days
+5. Cut over to real SolarWinds data source
+
+**Given** the SolarWinds integration is planned
+**When** we configure the connection
+**Then** the adapter supports:
+- OAuth2 or API key authentication
+- Polling interval configuration
+- Metric mapping configuration
+- Connection health monitoring
+
+**Given** the integration is complete
+**When** SolarWinds data flows into the platform
+**Then** no changes are required to health scoring, prediction, or alerting
+**And** the data source can be switched via configuration (not code)
 
 ---
 

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Health Analytics Platform - Architecture Overview</title>
+    <title>InfraSense - Architecture Overview (COMPLETE)</title>
     <style>
         * {
             margin: 0;
@@ -21,8 +21,6 @@
             max-width: 1400px;
             margin: 0 auto;
         }
-        
-        /* Header */
         .header {
             text-align: center;
             margin-bottom: 30px;
@@ -40,8 +38,6 @@
             color: #94A3B8;
             font-size: 16px;
         }
-        
-        /* Main Flow Diagram */
         .flow-section {
             background: #1E293B;
             border-radius: 20px;
@@ -65,8 +61,6 @@
             background: linear-gradient(180deg, #3B82F6, #8B5CF6);
             border-radius: 2px;
         }
-        
-        /* Flow Boxes */
         .flow-container {
             display: flex;
             align-items: center;
@@ -74,7 +68,6 @@
             gap: 12px;
             flex-wrap: wrap;
         }
-        
         .flow-box {
             background: #0F172A;
             border-radius: 12px;
@@ -88,27 +81,10 @@
             transform: translateY(-4px);
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
-        .flow-box .icon {
-            font-size: 28px;
-            margin-bottom: 8px;
-        }
-        .flow-box .label {
-            font-size: 13px;
-            font-weight: 600;
-            color: #F1F5F9;
-        }
-        .flow-box .tech {
-            font-size: 10px;
-            color: #64748B;
-            margin-top: 4px;
-        }
-        
-        .flow-arrow {
-            color: #475569;
-            font-size: 24px;
-        }
-        
-        /* Data Flow */
+        .flow-box .icon { font-size: 28px; margin-bottom: 8px; }
+        .flow-box .label { font-size: 13px; font-weight: 600; color: #F1F5F9; }
+        .flow-box .tech { font-size: 10px; color: #64748B; margin-top: 4px; }
+        .flow-arrow { color: #475569; font-size: 24px; }
         .data-flow {
             display: flex;
             align-items: center;
@@ -120,11 +96,7 @@
             border-radius: 10px;
             flex-wrap: wrap;
         }
-        .data-flow .label {
-            font-size: 12px;
-            color: #64748B;
-            min-width: 100px;
-        }
+        .data-flow .label { font-size: 12px; color: #64748B; min-width: 100px; }
         .data-flow .format {
             background: #1E293B;
             padding: 6px 12px;
@@ -133,14 +105,11 @@
             color: #8B5CF6;
             font-family: 'JetBrains Mono', monospace;
         }
-        
-        /* Tech Stack Grid */
         .tech-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 16px;
         }
-        
         .tech-card {
             background: #0F172A;
             border-radius: 12px;
@@ -154,11 +123,7 @@
             color: #64748B;
             margin-bottom: 12px;
         }
-        .tech-card .stack {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
+        .tech-card .stack { display: flex; flex-wrap: wrap; gap: 8px; }
         .tech-card .stack-item {
             background: #1E293B;
             padding: 6px 12px;
@@ -166,8 +131,7 @@
             font-size: 12px;
             color: #F1F5F9;
         }
-        
-        /* Pipeline Flow */
+        .tech-card .stack-item.deferred { color: #64748B; text-decoration: line-through; }
         .pipeline {
             display: flex;
             gap: 8px;
@@ -183,18 +147,8 @@
             text-align: center;
             border: 1px solid #334155;
         }
-        .pipeline-stage .stage-name {
-            font-size: 12px;
-            font-weight: 600;
-            color: #F1F5F9;
-            margin-bottom: 8px;
-        }
-        .pipeline-stage .stage-items {
-            font-size: 10px;
-            color: #94A3B8;
-        }
-        
-        /* Legend */
+        .pipeline-stage .stage-name { font-size: 12px; font-weight: 600; color: #F1F5F9; margin-bottom: 8px; }
+        .pipeline-stage .stage-items { font-size: 10px; color: #94A3B8; }
         .legend {
             display: flex;
             justify-content: center;
@@ -202,20 +156,8 @@
             margin-top: 24px;
             flex-wrap: wrap;
         }
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 12px;
-            color: #94A3B8;
-        }
-        .legend-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-        }
-        
-        /* Stats */
+        .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #94A3B8; }
+        .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
         .stats-row {
             display: flex;
             justify-content: center;
@@ -223,236 +165,214 @@
             margin-top: 30px;
             padding-top: 20px;
             border-top: 1px solid #334155;
+            flex-wrap: wrap;
         }
-        .stat {
-            text-align: center;
-        }
-        .stat-value {
-            font-size: 24px;
-            font-weight: 700;
-            color: #3B82F6;
-        }
-        .stat-label {
-            font-size: 11px;
-            color: #64748B;
-            margin-top: 4px;
+        .stat { text-align: center; }
+        .stat-value { font-size: 24px; font-weight: 700; color: #3B82F6; }
+        .stat-label { font-size: 11px; color: #64748B; margin-top: 4px; }
+        .note {
+            margin-top: 20px;
+            padding: 12px 16px;
+            background: #0F172A;
+            border: 1px dashed #334155;
+            border-radius: 8px;
+            font-size: 12px;
+            color: #94A3B8;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
         <div class="header">
-            <h1>Health Analytics Platform</h1>
-            <p>IT Early Warning System - Architecture Overview</p>
+            <h1>InfraSense</h1>
+            <p>InfraSense - Architecture Overview (COMPLETE)</p>
         </div>
-        
-        <!-- Main Flow -->
+
         <div class="flow-section">
             <div class="section-title">Data Flow: From Infrastructure to Insight</div>
-            
             <div class="flow-container">
                 <div class="flow-box">
                     <div class="icon">🖥️</div>
                     <div class="label">Infrastructure</div>
-                    <div class="tech">Servers, DBs, Network</div>
+                    <div class="tech">Local, Simulated, Prometheus, SolarWinds</div>
                 </div>
                 <div class="flow-arrow">→</div>
-                
                 <div class="flow-box">
                     <div class="icon">📡</div>
-                    <div class="label">Collectors</div>
-                    <div class="tech">OpenTelemetry</div>
+                    <div class="label">Data Sources</div>
+                    <div class="tech">In-process Adapters</div>
                 </div>
                 <div class="flow-arrow">→</div>
-                
                 <div class="flow-box">
                     <div class="icon">⚙️</div>
-                    <div class="label">Processing</div>
-                    <div class="tech">FastAPI + Python</div>
+                    <div class="label">Monolith</div>
+                    <div class="tech">FastAPI + Services</div>
                 </div>
                 <div class="flow-arrow">→</div>
-                
                 <div class="flow-box">
                     <div class="icon">🧠</div>
                     <div class="label">Prediction</div>
-                    <div class="tech">ML Models</div>
+                    <div class="tech">Static → Dynamic → Trend</div>
                 </div>
                 <div class="flow-arrow">→</div>
-                
                 <div class="flow-box">
                     <div class="icon">🔔</div>
                     <div class="label">Alerting</div>
-                    <div class="tech">Email/Webhooks</div>
+                    <div class="tech">WebSocket push</div>
                 </div>
                 <div class="flow-arrow">→</div>
-                
                 <div class="flow-box">
                     <div class="icon">📊</div>
                     <div class="label">Dashboard</div>
-                    <div class="tech">React + Grafana</div>
+                    <div class="tech">React SPA</div>
                 </div>
             </div>
-            
             <div class="data-flow">
                 <span class="label">Data Format:</span>
-                <span class="format">OTLP/HTTP</span>
                 <span class="format">JSON</span>
                 <span class="format">Time-Series</span>
                 <span class="format">JSON</span>
-                <span class="format">HTML/JSON</span>
+                <span class="format">WS / JSON</span>
             </div>
+            <div class="note">Email and webhook notification modules exist but are not invoked at runtime yet — in-app WebSocket delivery is the live alerting channel. OpenTelemetry / Prometheus / Kafka / Kubernetes are deferred, not wired.</div>
         </div>
-        
-        <!-- Tech Stack -->
+
         <div class="flow-section">
             <div class="section-title">Technology Stack</div>
-            
             <div class="tech-grid">
                 <div class="tech-card">
                     <div class="category">Frontend</div>
                     <div class="stack">
-                        <span class="stack-item">React 18</span>
-                        <span class="stack-item">TypeScript</span>
-                        <span class="stack-item">Grafana</span>
+                        <span class="stack-item">React 18.3</span>
+                        <span class="stack-item">TypeScript 5.9</span>
+                        <span class="stack-item">Vite 8</span>
+                        <span class="stack-item">Recharts 3</span>
+                        <span class="stack-item">Tailwind 4</span>
                     </div>
                 </div>
-                
                 <div class="tech-card">
                     <div class="category">Backend</div>
                     <div class="stack">
-                        <span class="stack-item">FastAPI</span>
+                        <span class="stack-item">FastAPI 0.109</span>
                         <span class="stack-item">Python 3.11</span>
-                        <span class="stack-item">REST API</span>
+                        <span class="stack-item">REST + WebSocket</span>
+                        <span class="stack-item">SQLAlchemy 2.0</span>
                     </div>
                 </div>
-                
                 <div class="tech-card">
                     <div class="category">Database</div>
                     <div class="stack">
-                        <span class="stack-item">PostgreSQL</span>
-                        <span class="stack-item">InfluxDB</span>
-                        <span class="stack-item">Redis</span>
+                        <span class="stack-item">PostgreSQL 16</span>
+                        <span class="stack-item">TimescaleDB</span>
+                        <span class="stack-item">SQLite (dev)</span>
                     </div>
                 </div>
-                
                 <div class="tech-card">
-                    <div class="category">Telemetry</div>
+                    <div class="category">Data Sources</div>
                     <div class="stack">
-                        <span class="stack-item">OpenTelemetry</span>
+                        <span class="stack-item">Local Adapter</span>
+                        <span class="stack-item">Simulator</span>
                         <span class="stack-item">Prometheus</span>
-                        <span class="stack-item">Collectors</span>
+                        <span class="stack-item">Mock SolarWinds</span>
+                        <span class="stack-item deferred">OpenTelemetry</span>
                     </div>
                 </div>
-                
                 <div class="tech-card">
-                    <div class="category">ML/Analytics</div>
+                    <div class="category">Analytics</div>
                     <div class="stack">
-                        <span class="stack-item">pandas</span>
-                        <span class="stack-item">statsmodels</span>
-                        <span class="stack-item">Prophet</span>
+                        <span class="stack-item">NumPy 1.26</span>
+                        <span class="stack-item">Linear Regression</span>
+                        <span class="stack-item deferred">scikit-learn</span>
+                        <span class="stack-item deferred">ML Models</span>
                     </div>
                 </div>
-                
                 <div class="tech-card">
                     <div class="category">Infrastructure</div>
                     <div class="stack">
-                        <span class="stack-item">Kubernetes</span>
-                        <span class="stack-item">Docker</span>
-                        <span class="stack-item">Kafka</span>
+                        <span class="stack-item">Docker Compose</span>
+                        <span class="stack-item">Flask demo apps</span>
+                        <span class="stack-item deferred">Kubernetes</span>
+                        <span class="stack-item deferred">Kafka</span>
                     </div>
                 </div>
             </div>
         </div>
-        
-        <!-- Prediction Pipeline -->
+
         <div class="flow-section">
-            <div class="section-title">Prediction Engine Pipeline</div>
-            
+            <div class="section-title">Prediction Pipeline</div>
             <div class="pipeline">
                 <div class="pipeline-stage">
                     <div class="stage-name">1. Static Threshold</div>
-                    <div class="stage-items">CPU > 90%<br>Disk > 95%</div>
+                    <div class="stage-items">Threshold table<br>Floor: ≥70 conf</div>
                 </div>
                 <div class="flow-arrow">→</div>
-                
                 <div class="pipeline-stage">
                     <div class="stage-name">2. Dynamic Threshold</div>
-                    <div class="stage-items">Historical baseline<br>Adaptive limits</div>
+                    <div class="stage-items">Mean + 2σ baseline<br>Floor: ≥60 conf</div>
                 </div>
                 <div class="flow-arrow">→</div>
-                
                 <div class="pipeline-stage">
                     <div class="stage-name">3. Trend Analysis</div>
-                    <div class="stage-items">Linear regression<br>Growth rate</div>
+                    <div class="stage-items">Linear regression<br>Floor: ≥50 conf</div>
                 </div>
                 <div class="flow-arrow">→</div>
-                
                 <div class="pipeline-stage">
-                    <div class="stage-name">4. ML Models</div>
-                    <div class="stage-items">Time-series forecasting<br>Pattern matching</div>
-                </div>
-                <div class="flow-arrow">→</div>
-                
-                <div class="pipeline-stage">
-                    <div class="stage-name">5. Output</div>
+                    <div class="stage-name">4. Output</div>
                     <div class="stage-items">Time-to-breach<br>Confidence %<br>Explanation</div>
                 </div>
             </div>
+            <div class="note">Simple-first hierarchy per AD-01: each level runs only if the previous can't reach its floor. Below all floors no prediction is produced. A request-time candidate generator exists for UI display but never persists or triggers alerts. ML models are deferred until real history validates accuracy.</div>
         </div>
-        
-        <!-- Integration Points -->
+
         <div class="flow-section">
-            <div class="section-title">Integration Points</div>
-            
+            <div class="section-title">Data Sources & Delivery</div>
             <div class="tech-grid">
                 <div class="tech-card">
-                    <div class="category">Monitoring Tools (Read)</div>
+                    <div class="category">Data Sources (Read)</div>
                     <div class="stack">
-                        <span class="stack-item">Datadog</span>
-                        <span class="stack-item">Dynatrace</span>
-                        <span class="stack-item">Splunk</span>
+                        <span class="stack-item">Local psutil</span>
+                        <span class="stack-item">Simulator (11 scenarios)</span>
                         <span class="stack-item">Prometheus</span>
+                        <span class="stack-item">Mock SolarWinds</span>
+                        <span class="stack-item">Demo apps (customer/payment/auth)</span>
                     </div>
                 </div>
-                
                 <div class="tech-card">
-                    <div class="category">Alerting (Write)</div>
+                    <div class="category">Alerting (Deferred)</div>
                     <div class="stack">
                         <span class="stack-item">PagerDuty</span>
                         <span class="stack-item">OpsGenie</span>
                         <span class="stack-item">ServiceNow</span>
-                        <span class="stack-item">Email</span>
+                        <span class="stack-item">Email (SMTP)</span>
                     </div>
                 </div>
             </div>
+            <div class="note">All sources flow through the DataSourceManager abstraction (AD-06); components are tagged source/provider. Webhook/email/escalation modules are implemented but not wired into the runtime loop yet.</div>
         </div>
-        
-        <!-- Stats -->
+
         <div class="stats-row">
             <div class="stat">
                 <div class="stat-value">&lt;2%</div>
                 <div class="stat-label">Collector CPU</div>
             </div>
             <div class="stat">
-                <div class="stat-value">70%+</div>
-                <div class="stat-label">Prediction Accuracy</div>
+                <div class="stat-value">5s</div>
+                <div class="stat-label">Updater Interval</div>
             </div>
             <div class="stat">
-                <div class="stat-value">2-6h</div>
-                <div class="stat-label">Warning Lead Time</div>
+                <div class="stat-value">10s</div>
+                <div class="stat-label">Collection Interval</div>
             </div>
             <div class="stat">
-                <div class="stat-value">99.9%</div>
-                <div class="stat-label">Uptime Target</div>
+                <div class="stat-value">0-100</div>
+                <div class="stat-label">Health Score</div>
             </div>
             <div class="stat">
-                <div class="stat-value">500+</div>
-                <div class="stat-label">Components</div>
+                <div class="stat-value">3</div>
+                <div class="stat-label">WS Channels</div>
             </div>
         </div>
-        
-        <!-- Legend -->
+
         <div class="legend">
             <div class="legend-item">
                 <div class="legend-dot" style="background: #3B82F6;"></div>
@@ -468,7 +388,7 @@
             </div>
             <div class="legend-item">
                 <div class="legend-dot" style="background: #F59E0B;"></div>
-                <span>External Systems</span>
+                <span>External / Deferred</span>
             </div>
         </div>
     </div>

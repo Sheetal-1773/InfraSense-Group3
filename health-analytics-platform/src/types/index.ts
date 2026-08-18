@@ -1,13 +1,25 @@
 export interface Component {
   id: string
   name: string
-  type: 'network' | 'server' | 'database' | 'api' | 'service' | 'cache' | 'queue'
-  status: 'healthy' | 'degraded' | 'down' | 'unknown'
-  healthScore: number
-  cpu: number
-  memory: number
-  disk: number
-  lastUpdated: string
+  hostname?: string
+  type?: string
+  category?: string
+  status: 'healthy' | 'degraded' | 'down' | 'unknown' | 'warning' | 'critical' | 'offline'
+  health_score: number
+  healthScore?: number
+  criticality?: string
+  owner?: string
+  description?: string
+  environment?: string
+  source?: string
+  provider?: string
+  category_id?: number
+  last_seen?: string
+  lastUpdated?: string
+  metrics?: Record<string, number>
+  cpu?: number
+  memory?: number
+  disk?: number
 }
 
 export interface Alert {
@@ -15,7 +27,7 @@ export interface Alert {
   title: string
   description: string
   severity: 'critical' | 'warning' | 'info'
-  status: 'active' | 'acknowledged' | 'resolved'
+  status: 'active' | 'open' | 'acknowledged' | 'resolved'
   componentId: string
   componentName: string
   timeToBreach?: number
@@ -30,8 +42,21 @@ export interface Alert {
 
 export interface HealthScore {
   overall: number
-  components: ComponentHealthScore[]
-  trend: HealthTrendPoint[]
+  components: {
+    healthy: number
+    warning: number
+    critical: number
+    offline: number
+  }
+  total?: number
+  trend?: HealthTrendPoint[]
+  timestamp?: string
+  categories?: {
+    server: number
+    network: number
+    database: number
+    application: number
+  }
 }
 
 export interface ComponentHealthScore {

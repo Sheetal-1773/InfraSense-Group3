@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Network, AlertTriangle, Server, Database, Cpu, Activity, Zap } from 'lucide-react'
 import { Badge } from '../components'
-import { useCorrelationGroups } from '../hooks'
+import { useCorrelationGroups, useComponents, useAlerts } from '../hooks'
 
 interface IncidentDetail {
   id: string
@@ -16,61 +16,6 @@ interface IncidentDetail {
   timeline: { time: string; event: string }[]
   recommendedAction: string
 }
-
-const mockIncidents: IncidentDetail[] = [
-  {
-    id: 'inc-001',
-    title: 'Payment Service Degradation',
-    severity: 'critical',
-    status: 'active',
-    rootCause: 'Database connection pool exhaustion due to high transaction volume',
-    businessImpact: 'Customer checkout failures, revenue impact potential',
-    affectedComponents: ['Payment Service', 'PostgreSQL Primary', 'Message Queue'],
-    dependencyChain: [
-      { name: 'Load Balancer', type: 'network', status: 'healthy' },
-      { name: 'APP-01 Server', type: 'server', status: 'degraded' },
-      { name: 'PostgreSQL Primary', type: 'database', status: 'critical' },
-      { name: 'Payment API', type: 'api', status: 'degraded' },
-      { name: 'Customer Checkout', type: 'service', status: 'degraded' },
-    ],
-    relatedAlerts: [
-      { id: 'alert-001', title: 'High CPU Usage - Payment Service', severity: 'warning' },
-      { id: 'alert-002', title: 'Memory Pressure - PostgreSQL', severity: 'warning' },
-      { id: 'alert-004', title: 'Service Degraded - Payment Service', severity: 'critical' },
-    ],
-    timeline: [
-      { time: '10:30', event: 'Alert triggered: High CPU on Payment Service' },
-      { time: '10:35', event: 'Database connection pool at 85%' },
-      { time: '10:42', event: 'Payment API response time increased' },
-      { time: '10:45', event: 'Customer checkout failures detected' },
-    ],
-    recommendedAction: 'Scale up database connection pool and investigate long-running queries',
-  },
-  {
-    id: 'inc-002',
-    title: 'API Gateway Latency',
-    severity: 'warning',
-    status: 'investigating',
-    rootCause: 'Auth service latency due to certificate validation delays',
-    businessImpact: 'Slower user authentication, increased login failures',
-    affectedComponents: ['API Gateway', 'Auth Service'],
-    dependencyChain: [
-      { name: 'External Network', type: 'network', status: 'healthy' },
-      { name: 'API Gateway', type: 'network', status: 'degraded' },
-      { name: 'Auth Service', type: 'service', status: 'degraded' },
-      { name: 'User Sessions', type: 'cache', status: 'healthy' },
-    ],
-    relatedAlerts: [
-      { id: 'alert-005', title: 'API Response Time Increased', severity: 'warning' },
-    ],
-    timeline: [
-      { time: '09:15', event: 'Auth service certificate expiring soon' },
-      { time: '09:20', event: 'Increased latency detected' },
-      { time: '09:30', event: 'Investigation started' },
-    ],
-    recommendedAction: 'Renew SSL certificate and review auth service configuration',
-  },
-]
 
 function DependencyChain({ chain }: { chain: { name: string; type: string; status: string }[] }) {
   const getIcon = (type: string) => {
@@ -234,8 +179,141 @@ function IncidentDetailView({ incident }: { incident: IncidentDetail }) {
 }
 
 export function Correlations() {
-  const { isLoading } = useCorrelationGroups()
-  const [selectedIncident, setSelectedIncident] = useState<string | null>(mockIncidents[0]?.id || null)
+  const { data: correlationGroups, isLoading: correlationsLoading } = useCorrelationGroups()
+  const { data: components, isLoading: componentsLoading } = useComponents()
+  const { data: alerts, isLoading: alertsLoading } = useAlerts()
+  const [selectedIncident, setSelectedIncident] = useState<string | null>(null)
+
+  const isLoading = correlationsLoading || componentsLoading || alertsLoading
+
+  const dynamicIncidents = useMemo(() => {
+    const incidents: IncidentDetail[] = []
+    const now = new Date()
+    
+    if (!components || components.length === 0) return incidents
+
+    const criticalComponents = components.filter((c: any) => 
+      c.status === 'critical' || c.status === 'down' || (c.health_score ?? c.healthScore ?? 100) < 40
+    )
+    const degradedComponents = components.filter((c: any) => 
+      c.status === 'degraded' || c.status === 'warning' || ((c.health_score ?? c.healthScore ?? 100) >= 40 && (c.health_score ?? c.healthScore ?? 100) < 70)
+    )
+
+    if (criticalComponents.length > 0) {
+      const primaryCritical = criticalComponents[0]
+      const compType = primaryCritical.type || primaryCritical.category || 'unknown'
+      
+      let rootCause = ''
+      let recommendedAction = ''
+      let title = ''
+      
+      if (compType === 'database' || compType === 'db') {
+        rootCause = `Database ${primaryCritical.name} is experiencing critical issues affecting query performance and connection handling`
+        recommendedAction = 'Investigate database queries, check connection pool settings, and review recent schema changes'
+        title = `${primaryCritical.name} Critical`
+      } else if (compType === 'application' || compType === 'api') {
+        rootCause = `Application ${primaryCritical.name} is degraded due to resource constraints or upstream dependencies`
+        recommendedAction = 'Check application logs, review resource allocation, and verify upstream service availability'
+        title = `${primaryCritical.name} Degradation`
+      } else if (compType === 'server') {
+        rootCause = `Server ${primaryCritical.name} is experiencing hardware or resource issues`
+        recommendedAction = 'Check server health metrics, review system logs, and consider resource scaling'
+        title = `${primaryCritical.name} Health Issue`
+      } else {
+        rootCause = `Component ${primaryCritical.name} is in critical state affecting dependent services`
+        recommendedAction = 'Investigate component health and address root cause immediately'
+        title = `${primaryCritical.name} Critical`
+      }
+
+      const affectedComps = [primaryCritical.name, ...degradedComponents.slice(0, 3).map((c: any) => c.name)]
+      const dependencyChain = [
+        { name: 'Load Balancer', type: 'network', status: 'healthy' },
+        { name: primaryCritical.name, type: compType, status: primaryCritical.status },
+        ...degradedComponents.slice(0, 2).map((c: any) => ({ 
+          name: c.name, 
+          type: c.type || c.category || 'unknown', 
+          status: c.status 
+        }))
+      ]
+
+      const relatedAlerts = alerts?.filter((a: any) => 
+        a.componentId === primaryCritical.id || a.component_name === primaryCritical.name
+      ).slice(0, 3).map((a: any) => ({
+        id: a.id,
+        title: a.title,
+        severity: a.severity
+      })) || []
+
+      incidents.push({
+        id: `inc-crit-${primaryCritical.id}`,
+        title,
+        severity: 'critical',
+        status: 'active',
+        rootCause,
+        businessImpact: `Service degradation affecting ${affectedComps.length} dependent components`,
+        affectedComponents: affectedComps,
+        dependencyChain,
+        relatedAlerts,
+        timeline: [
+          { time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), event: 'Issue detected and logged' },
+          { time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), event: 'Alert generated for component health' },
+          { time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), event: 'Correlation analysis initiated' },
+        ],
+        recommendedAction
+      })
+    }
+
+    if (degradedComponents.length > 0 && incidents.length === 0) {
+      const primaryDegraded = degradedComponents[0]
+      const compType = primaryDegraded.type || primaryDegraded.category || 'unknown'
+      
+      incidents.push({
+        id: `inc-deg-${primaryDegraded.id}`,
+        title: `${primaryDegraded.name} Performance Degradation`,
+        severity: 'warning',
+        status: 'investigating',
+        rootCause: `Component ${primaryDegraded.name} showing degraded performance metrics`,
+        businessImpact: 'Potential impact on dependent services if condition worsens',
+        affectedComponents: [primaryDegraded.name],
+        dependencyChain: [
+          { name: 'Network', type: 'network', status: 'healthy' },
+          { name: primaryDegraded.name, type: compType, status: 'degraded' },
+        ],
+        relatedAlerts: [],
+        timeline: [
+          { time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), event: 'Degradation detected' },
+          { time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), event: 'Monitoring for changes' },
+        ],
+        recommendedAction: 'Continue monitoring and prepare contingency actions if needed'
+      })
+    }
+
+    if (correlationGroups && correlationGroups.length > 0) {
+      correlationGroups.slice(0, 2).forEach((group: any) => {
+        incidents.push({
+          id: `inc-corr-${group.id}`,
+          title: group.name || 'Correlation Detected',
+          severity: 'info',
+          status: 'investigating',
+          rootCause: group.rootCause || 'Multiple components showing correlated behavior',
+          businessImpact: 'Potential cascading effect across infrastructure',
+          affectedComponents: group.components || [],
+          dependencyChain: (group.components || []).slice(0, 4).map((name: string, idx: number) => ({
+            name,
+            type: 'unknown',
+            status: idx === 0 ? 'degraded' : 'healthy'
+          })),
+          relatedAlerts: [],
+          timeline: [
+            { time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), event: 'Correlation identified' },
+          ],
+          recommendedAction: 'Analyze correlation pattern and implement preventive measures'
+        })
+      })
+    }
+
+    return incidents
+  }, [components, alerts, correlationGroups])
 
   if (isLoading) {
     return (
@@ -245,7 +323,7 @@ export function Correlations() {
     )
   }
 
-  const selected = mockIncidents.find(i => i.id === selectedIncident)
+  const selected = dynamicIncidents.find(i => i.id === selectedIncident) || dynamicIncidents[0]
 
   return (
     <div className="bg-white min-h-screen">
@@ -256,8 +334,8 @@ export function Correlations() {
             <p className="text-sm text-[#8A8A8A]">Incident analysis and dependency mapping</p>
           </div>
           <div className="flex items-center gap-3">
-            <Badge variant="danger">{mockIncidents.filter(i => i.status === 'active').length} active</Badge>
-            <Badge variant="warning">{mockIncidents.filter(i => i.status === 'investigating').length} investigating</Badge>
+            <Badge variant="danger">{dynamicIncidents.filter(i => i.status === 'active').length} active</Badge>
+            <Badge variant="warning">{dynamicIncidents.filter(i => i.status === 'investigating').length} investigating</Badge>
           </div>
         </div>
 
@@ -265,7 +343,7 @@ export function Correlations() {
           <div className="lg:col-span-1">
             <h2 className="text-sm font-semibold text-[#111111] mb-4">Incidents</h2>
             <div className="space-y-2">
-              {mockIncidents.map(incident => (
+              {dynamicIncidents.map(incident => (
                 <IncidentCard 
                   key={incident.id} 
                   incident={incident}
@@ -273,6 +351,13 @@ export function Correlations() {
                   onClick={() => setSelectedIncident(incident.id)}
                 />
               ))}
+              {dynamicIncidents.length === 0 && (
+                <div className="py-8 text-center text-[#8A8A8A]">
+                  <Network className="w-8 h-8 mx-auto mb-2 text-[#E5E5E5]" />
+                  <p className="text-sm">No correlations detected</p>
+                  <p className="text-xs">All systems operating normally</p>
+                </div>
+              )}
             </div>
           </div>
 

@@ -5,5 +5,6 @@ export function useCorrelationGroups() {
   return useQuery({
     queryKey: ['correlations'],
     queryFn: getCorrelationGroups,
+    refetchInterval: 120000,
   })
 }

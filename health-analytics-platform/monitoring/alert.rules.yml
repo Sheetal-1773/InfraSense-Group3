@@ -1,0 +1,74 @@
+groups:
+  - name: infrastructure-alerts
+    rules:
+      - alert: HighCPULoad
+        expr: node_cpu_seconds_total{mode="user"} > 0.8
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU load (instance {{ $labels.instance }})"
+          description: "CPU load is {{ $value }} for 5 minutes"
+      
+      - alert: HighMemoryUsage
+        expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory usage (instance {{ $labels.instance }})"
+          description: "Memory usage is {{ $value }}% for 5 minutes"
+      
+      - alert: HighDiskUsage
+        expr: node_filesystem_usage{mountpoint="/"} > 0.8
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High disk usage (instance {{ $labels.instance }})"
+          description: "Disk usage is {{ $value }}% for 5 minutes"
+      
+      - alert: HighNetworkLatency
+        expr: probe_duration_seconds > 1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High network latency (instance {{ $labels.instance }})"
+          description: "Network latency is {{ $value }} seconds for 5 minutes"
+      
+      - alert: HighAPIErrorRate
+        expr: api_error_rate > 0.1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High API error rate (instance {{ $labels.instance }})"
+          description: "API error rate is {{ $value }} for 5 minutes"
+      
+      - alert: HighAPILatency
+        expr: api_latency_seconds > 1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High API latency (instance {{ $labels.instance }})"
+          description: "API latency is {{ $value }} seconds for 5 minutes"
+      
+      - alert: HighDatabaseConnections
+        expr: pg_stat_activity_count > 0.8 * pg_stat_activity_max
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High database connections (instance {{ $labels.instance }})"
+          description: "Database connections are {{ $value }} for 5 minutes"
+      
+      - alert: HighDatabaseQueryLatency
+        expr: pg_stat_statements_total_time > 1000
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High database query latency (instance {{ $labels.instance }})"
+          description: "Database query latency is {{ $value }} for 5 minutes"

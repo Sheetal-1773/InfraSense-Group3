@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  customer-api:
+    build:
+      context: ./customer_api
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    networks:
+      - infrasense-apps
+
+  payment-api:
+    build:
+      context: ./payment_api
+      dockerfile: Dockerfile
+    ports:
+      - "4001:4001"
+    networks:
+      - infrasense-apps
+
+  auth-api:
+    build:
+      context: ./auth_api
+      dockerfile: Dockerfile
+    ports:
+      - "4002:4002"
+    networks:
+      - infrasense-apps
+
+networks:
+  infrasense-apps:
+    driver: bridge

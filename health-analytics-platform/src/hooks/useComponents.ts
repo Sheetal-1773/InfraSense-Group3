@@ -1,10 +1,16 @@
 import { useQuery } from '@tanstack/react-query'
 import { getComponents, getComponent } from '../services/api'
 
-export function useComponents() {
+export function useComponents(source?: string) {
   return useQuery({
-    queryKey: ['components'],
-    queryFn: getComponents,
+    queryKey: ['components', source],
+    queryFn: async () => {
+      console.log('[useComponents] Fetching with source:', source)
+      const result = await getComponents(source)
+      console.log('[useComponents] Result:', result)
+      return result
+    },
+    refetchInterval: 120000,
   })
 }
 

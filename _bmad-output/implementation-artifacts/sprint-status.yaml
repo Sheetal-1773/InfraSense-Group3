@@ -1,9 +1,9 @@
-# generated: 2026-08-10T00:00:00.000Z
-# last_updated: 2026-08-10T00:00:00.000Z
+# generated: 2026-08-12T00:00:00Z
+# last_updated: 2026-08-16T00:00:00Z
 # project: group_3
 # project_key: NOKEY
 # tracking_system: file-system
-# story_location: C:\group_3\_bmad-output\implementation-artifacts
+# story_location: implementation-artifacts
 
 # STATUS DEFINITIONS:
 # ==================
@@ -26,121 +26,84 @@
 # Retrospective Status:
 #   - optional: Can be completed but not required
 #   - done: Retrospective has been completed
-#
-# Action Item Status:
-#   - open: Committed during a retrospective, not yet addressed
-#   - in-progress: Actively being worked on
-#   - done: Completed
-#
-# WORKFLOW NOTES:
-# ===============
-# - Epic transitions to 'in-progress' automatically when first story is created
-# - Stories can be worked in parallel if team capacity allows
-# - Developer typically creates next story after previous one is 'done' to incorporate learnings
-# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
-# - Retrospective appends its action items to action_items; sprint-status surfaces open ones
 
-generated: 2026-08-10T00:00:00.000Z
-last_updated: 2026-08-10T00:00:00.000Z
+generated: 2026-08-12T00:00:00Z
+last_updated: 2026-08-16T00:00:00Z
 project: group_3
 project_key: NOKEY
 tracking_system: file-system
-story_location: C:\group_3\_bmad-output\implementation-artifacts
+story_location: implementation-artifacts
 
 development_status:
-  # ============================================
-  # PHASE 1: FRONTEND FIRST (with Mock Data)
-  # ============================================
-
-  # Epic 1: Frontend Foundation
-  epic-1: done
-  1-1-react-project-setup: done
-  1-2-navigation-layout-sidebar: done
-  1-3-theme-design-tokens: done
-  1-4-reusable-components-library: done
-  1-5-api-service-layer-mock-data: done
+  # Epic 1: Telemetry Ingestion & Storage
+  epic-1: backlog
+  1-1-opentelemetry-collector-setup: review
+  1-2-prometheus-remote-write-endpoint: review
+  1-3-component-registration-api: review
+  1-4-metrics-storage-schema: review
+  1-5-data-validation-quality-checks: review
+  1-6-postgresql-timescaledb-setup: review
+  1-7-metric-catalogue-definition: review
+  1-8-mock-solarwinds-data-source-adapter: review
+  1-9-data-source-abstraction-layer: review
   epic-1-retrospective: optional
 
-  # Epic 2: Dashboard & Health Visualization
-  epic-2: done
-  2-1-main-dashboard-overview: done
-  2-2-health-score-cards: done
-  2-3-component-grid-list: done
-  2-4-health-trend-charts: done
-  2-5-filtering-sorting-pagination: done
+  # Epic 2: Health Monitoring
+  epic-2: backlog
+  2-1-health-score-calculation-engine: review
+  2-2-health-score-history-storage: review
+  2-3-configurable-health-thresholds: review
+  2-4-duration-based-threshold-detection: review
+  2-5-overall-system-health-aggregation: review
   epic-2-retrospective: optional
 
-  # Epic 3: Alert & Prediction Experience
-  epic-3: done
-  3-1-alert-list-view: done
-  3-2-predictive-alert-card: done
-  3-3-reactive-alert-card: done
-  3-4-alert-detail-page-time-to-breach: done
-  3-5-confidence-interval-display: done
-  3-6-alert-notification-toast: done
+  # Epic 3: Anomaly Detection & Alerting
+  epic-3: backlog
+  3-1-static-threshold-detection: review
+  3-2-alert-generation-service: ready-for-dev
+  3-3-alert-deduplication: backlog
+  3-4-email-notification-delivery: backlog
+  3-5-in-app-notification: backlog
+  3-6-webhook-integration: backlog
+  3-7-alert-escalation: backlog
+  3-8-predictive-vs-reactive-alert-classification: backlog
   epic-3-retrospective: optional
 
-  # Epic 4: Explanation & Recommendations
-  epic-4: done
-  4-1-prediction-explanation-panel: done
-  4-2-contributing-factors-display: done
-  4-3-historical-pattern-matching: done
-  4-4-recommended-actions-panel: done
-  4-5-runbook-link-integration: done
-  4-6-acknowledge-dismiss-actions: done
+  # Epic 4: Visualization Dashboard
+  epic-4: backlog
+  4-1-health-overview-page: backlog
+  4-2-component-detail-view: backlog
+  4-3-historical-trends-charts: backlog
+  4-4-grafana-integration: backlog
+  4-5-backend-rest-api-definitions: backlog
+  4-6-clickable-detail-views: backlog
   epic-4-retrospective: optional
 
-  # Epic 5: Correlation & Blast Radius
-  epic-5: done
-  5-1-correlation-grouping-view: done
-  5-2-root-cause-ranking: done
-  5-3-blast-radius-visualization: done
-  5-4-dependency-topology-graph: done
-  5-5-business-impact-context: done
-  5-6-manual-correlation-tagging: done
+  # Epic 5: Time-to-Breach Prediction
+  epic-5: backlog
+  5-1-static-threshold-prediction: backlog
+  5-2-dynamic-threshold-prediction: backlog
+  5-3-prediction-accuracy-tracking: backlog
+  5-4-prediction-model-hierarchy: backlog
+  5-5-solarwinds-integration-roadmap: backlog
   epic-5-retrospective: optional
 
-  # ============================================
-  # PHASE 2: BACKEND
-  # ============================================
-
-  # Epic 6: Backend & Telemetry
+  # Epic 6: Explainability & Recommendations
   epic-6: backlog
-  6-1-fastapi-project-setup: backlog
-  6-2-postgresql-schema-migrations: backlog
-  6-3-component-crud-api: backlog
-  6-4-metrics-ingestion-api: backlog
-  6-5-health-score-calculation-service: backlog
-  6-6-open-telemetry-collector-setup: backlog
-  6-7-prometheus-remote-write-endpoint: backlog
+  6-1-human-readable-explanations: backlog
+  6-2-contributing-factors-display: backlog
+  6-3-historical-pattern-matching: backlog
+  6-4-recommended-actions-engine: backlog
+  6-5-runbook-integration: backlog
+  6-6-no-auto-remediation-enforcement: backlog
   epic-6-retrospective: optional
 
-  # ============================================
-  # PHASE 3: PREDICTIVE ENGINE
-  # ============================================
-
-  # Epic 7: Analytics & Prediction Engine
+  # Epic 7: Correlation & Blast Radius
   epic-7: backlog
-  7-1-static-threshold-detection: backlog
-  7-2-dynamic-baseline-detection: backlog
-  7-3-time-to-breach-calculation: backlog
-  7-4-confidence-interval-engine: backlog
-  7-5-prediction-accuracy-tracking: backlog
-  7-6-anomaly-alert-generation: backlog
+  7-1-cross-layer-correlation-engine: backlog
+  7-2-root-cause-probability-ranking: backlog
+  7-3-manual-correlation-tagging: backlog
+  7-4-downstream-impact-analysis: backlog
+  7-5-business-impact-context: backlog
+  7-6-dependency-topology-mapping: backlog
   epic-7-retrospective: optional
-
-  # ============================================
-  # PHASE 4: PRODUCTION
-  # ============================================
-
-  # Epic 8: Integration, Security & Production
-  epic-8: backlog
-  8-1-email-notification-service: backlog
-  8-2-webhook-integration-pagerduty: backlog
-  8-3-in-app-notification-real-time: backlog
-  8-4-alert-deduplication-escalation: backlog
-  8-5-tls-encryption: backlog
-  8-6-rbac-user-roles: backlog
-  8-7-audit-logging: backlog
-  8-8-grafana-integration: backlog
-  epic-8-retrospective: optional

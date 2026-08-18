@@ -1,5 +1,7 @@
 ---
 baseline_commit: NO_VCS
+status: complete
+updated: 2026-08-18
 ---
 
 # Story 4.2: Contributing Factors Display

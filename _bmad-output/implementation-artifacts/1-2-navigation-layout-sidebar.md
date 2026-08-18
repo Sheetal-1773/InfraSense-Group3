@@ -1,11 +1,13 @@
 ---
 baseline_commit: NO_VCS
+status: complete
+updated: 2026-08-18
 ---
 
 # Story 1.2: Navigation Layout & Sidebar
 
 **Epic:** 1 - Frontend Foundation  
-**Status:** review  
+**Status:** complete  
 **Story ID:** 1.2
 
 ## Story

@@ -1,11 +1,14 @@
 import { useState, useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useAlerts, useAcknowledgeAlert, useResolveAlert } from '../hooks'
 import { Badge, Button } from '../components'
 import { CheckCircle, Activity, Zap, X, Clock, AlertTriangle, ArrowRight, Info } from 'lucide-react'
 
 function getStatusVariant(status: string) {
   switch (status) {
-    case 'active': return 'danger'
+    case 'active':
+    case 'open':
+      return 'danger'
     case 'acknowledged': return 'warning'
     case 'resolved': return 'success'
     default: return 'default'
@@ -31,35 +34,39 @@ function formatTimeRemaining(minutes: number) {
   return `${hours}h ${mins}m`
 }
 
-type TabType = 'predictive' | 'reactive'
 type StatusFilter = 'all' | 'active' | 'acknowledged' | 'resolved'
 type SeverityFilter = 'all' | 'critical' | 'warning' | 'info'
 
 export function Alerts() {
+  const navigate = useNavigate()
   const { data: alerts, isLoading } = useAlerts()
   const acknowledgeMutation = useAcknowledgeAlert()
   const resolveMutation = useResolveAlert()
-  const [activeTab, setActiveTab] = useState<TabType>('predictive')
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all')
   const [severityFilter, setSeverityFilter] = useState<SeverityFilter>('all')
   const [selectedAlert, setSelectedAlert] = useState<any>(null)
 
-  const predictiveAlerts = useMemo(() => {
-    return alerts?.filter(a => a.timeToBreach !== undefined) ?? []
-  }, [alerts])
-
   const reactiveAlerts = useMemo(() => {
-    let result = alerts?.filter(a => a.timeToBreach === undefined) ?? []
+    let result = (alerts ?? []).filter((a: any) => {
+      const alertType = a.alertType || a.alert_type || ''
+      return alertType !== 'predictive'
+    })
     
     if (statusFilter !== 'all') {
-      result = result.filter(a => a.status === statusFilter)
+      if (statusFilter === 'active') {
+        result = result.filter((a: any) => a.status === 'active' || a.status === 'open')
+      } else {
+        result = result.filter((a: any) => a.status === statusFilter)
+      }
     }
     if (severityFilter !== 'all') {
-      result = result.filter(a => a.severity === severityFilter)
+      result = result.filter((a: any) => a.severity === severityFilter)
     }
     
     return result
   }, [alerts, statusFilter, severityFilter])
+
+  const activeAlertsCount = reactiveAlerts.filter((a: any) => a.status === 'active' || a.status === 'open').length
 
   if (isLoading) {
     return (
@@ -75,123 +82,21 @@ export function Alerts() {
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-2xl font-semibold text-[#111111]">Alerts</h1>
-            <p className="text-sm text-[#8A8A8A] mt-1">Predictive and reactive alert management</p>
+            <p className="text-sm text-[#8A8A8A] mt-1">Active operational alerts and incident management</p>
           </div>
           <div className="flex items-center gap-3">
-            <Badge variant="warning">{predictiveAlerts.length} predictive</Badge>
-            <Badge variant="danger">{reactiveAlerts.filter(a => a.status === 'active').length} active</Badge>
+            <button 
+              onClick={() => navigate('/predictions')}
+              className="flex items-center gap-2 px-3 py-1.5 text-sm text-[#8A8A8A] hover:text-[#FF7900] transition-colors"
+            >
+              <Zap className="w-4 h-4" />
+              View Predictions
+            </button>
+            <Badge variant="danger">{activeAlertsCount} active</Badge>
           </div>
         </div>
 
-        <div className="flex gap-6 border-b border-[#E5E5E5] bg-white">
-          <button
-            onClick={() => setActiveTab('predictive')}
-            className={`flex items-center gap-2 px-1 py-4 border-b-2 transition-colors ${
-              activeTab === 'predictive'
-                ? 'border-[#FF7900] text-[#111111]'
-                : 'border-transparent text-[#8A8A8A] hover:text-[#333333]'
-            }`}
-          >
-            <Zap className="w-4 h-4" />
-            <span className="text-sm font-medium">Predictive Alerts</span>
-            <span className="ml-1 px-2 py-0.5 bg-[#FF7900]/10 text-[#FF7900] rounded-full text-xs">
-              {predictiveAlerts.length}
-            </span>
-          </button>
-          <button
-            onClick={() => setActiveTab('reactive')}
-            className={`flex items-center gap-2 px-1 py-4 border-b-2 transition-colors ${
-              activeTab === 'reactive'
-                ? 'border-[#FF7900] text-[#111111]'
-                : 'border-transparent text-[#8A8A8A] hover:text-[#333333]'
-            }`}
-          >
-            <Activity className="w-4 h-4" />
-            <span className="text-sm font-medium">Active/Reactive Alerts</span>
-            <span className="ml-1 px-2 py-0.5 bg-red-100 text-red-600 rounded-full text-xs">
-              {reactiveAlerts.filter(a => a.status === 'active').length}
-            </span>
-          </button>
-        </div>
-
-        {activeTab === 'predictive' && (
-          <div className="bg-white border border-[#E5E5E5] rounded-lg">
-            <div className="p-4 border-b border-[#E5E5E5]">
-              <h2 className="text-lg font-semibold text-[#111111]">Predictive Alerts</h2>
-              <p className="text-sm text-[#8A8A8A]">AI-powered predictions that alert you BEFORE issues become incidents</p>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-[#E5E5E5] bg-[#F7F7F7]">
-                    <th className="text-left text-xs font-medium text-[#8A8A8A] py-3 px-4">Severity</th>
-                    <th className="text-left text-xs font-medium text-[#8A8A8A] py-3 px-4">Alert</th>
-                    <th className="text-left text-xs font-medium text-[#8A8A8A] py-3 px-4">Component</th>
-                    <th className="text-right text-xs font-medium text-[#8A8A8A] py-3 px-4">Current Value</th>
-                    <th className="text-right text-xs font-medium text-[#8A8A8A] py-3 px-4">Predicted Threshold</th>
-                    <th className="text-right text-xs font-medium text-[#8A8A8A] py-3 px-4">Time to Breach</th>
-                    <th className="text-right text-xs font-medium text-[#8A8A8A] py-3 px-4">Confidence</th>
-                    <th className="text-left text-xs font-medium text-[#8A8A8A] py-3 px-4">Status</th>
-                    <th className="text-left text-xs font-medium text-[#8A8A8A] py-3 px-4">Impact</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {predictiveAlerts.map(alert => (
-                    <tr 
-                      key={alert.id} 
-                      onClick={() => setSelectedAlert(alert)}
-                      className="border-b border-[#E5E5E5] last:border-0 hover:bg-[#FFF4E6] cursor-pointer"
-                    >
-                      <td className="py-3 px-4">
-                        <div className="flex items-center gap-2">
-                          <span className={`w-2 h-2 rounded-full ${
-                            alert.severity === 'critical' ? 'bg-red-600' : 
-                            alert.severity === 'warning' ? 'bg-[#FF7900]' : 'bg-[#8A8A8A]'
-                          }`}></span>
-                          <span className="text-sm font-medium text-[#111111] capitalize">{alert.severity}</span>
-                        </div>
-                      </td>
-                      <td className="py-3 px-4">
-                        <span className="text-sm font-medium text-[#111111]">{alert.title}</span>
-                      </td>
-                      <td className="py-3 px-4 text-sm text-[#8A8A8A]">{alert.componentName}</td>
-                      <td className="py-3 px-4 text-sm text-[#111111] text-right">{alert.confidenceInterval?.lower || 0}%</td>
-                      <td className="py-3 px-4 text-sm text-[#111111] text-right font-medium">{alert.confidenceInterval?.upper || 0}%</td>
-                      <td className="py-3 px-4 text-sm text-right">
-                        <span className={`font-medium ${alert.timeToBreach && alert.timeToBreach < 30 ? 'text-red-600' : alert.timeToBreach && alert.timeToBreach < 60 ? 'text-[#FF7900]' : 'text-[#111111]'}`}>
-                          {alert.timeToBreach ? formatTimeRemaining(alert.timeToBreach) : '-'}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4 text-sm text-[#8A8A8A] text-right">{alert.confidenceInterval ? `${alert.confidenceInterval.lower}-${alert.confidenceInterval.upper}%` : '-'}</td>
-                      <td className="py-3 px-4">
-                        <Badge variant={getStatusVariant(alert.status)}>{alert.status}</Badge>
-                      </td>
-                      <td className="py-3 px-4">
-                        <span className={`text-xs font-medium ${
-                          alert.severity === 'critical' ? 'text-red-600' : 
-                          alert.severity === 'warning' ? 'text-[#FF7900]' : 'text-[#8A8A8A]'
-                        }`}>
-                          {alert.severity === 'critical' ? 'High' : alert.severity === 'warning' ? 'Medium' : 'Low'}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                  {predictiveAlerts.length === 0 && (
-                    <tr>
-                      <td colSpan={9} className="py-12 text-center text-[#8A8A8A]">
-                        <Zap className="w-8 h-8 mx-auto mb-2 text-[#E5E5E5]" />
-                        <p>No predictive alerts</p>
-                        <p className="text-xs">All systems operating within normal parameters</p>
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'reactive' && (
+        {(
           <div className="space-y-4">
             <div className="flex flex-wrap items-center gap-4 bg-white p-4 border border-[#E5E5E5] rounded-lg">
               <select
@@ -277,7 +182,7 @@ export function Alerts() {
                         </td>
                         <td className="py-3 px-4">
                           <div className="flex gap-2" onClick={e => e.stopPropagation()}>
-                            {alert.status === 'active' && (
+                            {(alert.status === 'active' || alert.status === 'open') && (
                               <Button
                                 size="sm"
                                 variant="outline"

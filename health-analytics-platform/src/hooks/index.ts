@@ -3,3 +3,4 @@ export { useAlerts, useActiveAlerts, useAlert, useAcknowledgeAlert, useResolveAl
 export { useHealthScore } from './useHealthScore'
 export { usePredictions } from './usePredictions'
 export { useCorrelationGroups } from './useCorrelations'
+export { useWebSocket, useLiveMetrics, useLiveAlerts, useLivePredictions } from './useWebSocket'

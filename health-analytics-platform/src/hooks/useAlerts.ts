@@ -5,6 +5,7 @@ export function useAlerts() {
   return useQuery({
     queryKey: ['alerts'],
     queryFn: getAlerts,
+    refetchInterval: 120000,
   })
 }
 
@@ -12,6 +13,7 @@ export function useActiveAlerts() {
   return useQuery({
     queryKey: ['alerts', 'active'],
     queryFn: getActiveAlerts,
+    refetchInterval: 120000,
   })
 }
 

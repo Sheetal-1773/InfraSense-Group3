@@ -1,8 +1,8 @@
 ---
-title: "EXPERIENCE: Health Analytics Platform"
-status: "draft"
+title: "EXPERIENCE: Health Analytics Platform (InfraSense)"
+status: "complete"
 created: "2026-08-10"
-updated: "2026-08-10"
+updated: "2026-08-18"
 product: "Health Analytics Platform"
 version: "1.0"
 ---

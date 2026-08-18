@@ -1,11 +1,13 @@
 ---
 baseline_commit: NO_VCS
+status: complete
+updated: 2026-08-18
 ---
 
 # Story 1.1: React Project Setup
 
 **Epic:** 1 - Frontend Foundation  
-**Status:** done  
+**Status:** complete  
 **Story ID:** 1.1
 
 ## Story

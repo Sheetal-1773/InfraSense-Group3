@@ -5,5 +5,6 @@ export function usePredictions() {
   return useQuery({
     queryKey: ['predictions'],
     queryFn: getPredictions,
+    refetchInterval: 120000,
   })
 }

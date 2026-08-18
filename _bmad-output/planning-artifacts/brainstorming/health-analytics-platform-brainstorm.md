@@ -1,4 +1,9 @@
-# Health Analytics Platform — Brainstorming Summary
+---
+status: complete
+updated: 2026-08-18
+---
+
+# Health Analytics Platform (InfraSense) — Brainstorming Summary
 
 ## Project Brief
 

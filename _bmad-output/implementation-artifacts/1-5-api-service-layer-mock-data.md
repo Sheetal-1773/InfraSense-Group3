@@ -1,11 +1,13 @@
 ---
 baseline_commit: NO_VCS
+status: complete
+updated: 2026-08-18
 ---
 
 # Story 1.5: API Service Layer (Mock Data)
 
 **Epic:** 1 - Frontend Foundation  
-**Status:** done  
+**Status:** complete  
 **Story ID:** 1.5
 
 ## Story

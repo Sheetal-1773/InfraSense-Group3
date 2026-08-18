@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Health Analytics Platform - System Context</title>
+    <title>InfraSense - System Context (COMPLETE)</title>
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
     <style>
         * {
@@ -73,7 +73,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Health Analytics Platform</h1>
+        <h1>InfraSense - Health Analytics Platform</h1>
         <p class="subtitle">System Context Diagram — Architecture Overview</p>
         
         <div class="diagram-card">
@@ -87,7 +87,7 @@
                         APP[Applications]
                     end
 
-                    subgraph "Health Analytics Platform"
+                    subgraph "InfraSense"
                         subgraph "Ingestion Layer"
                             direction TB
                             OT[OpenTelemetry Collector]
@@ -108,7 +108,7 @@
                             AS[Alert Service]
                             NS[Notification Service]
                             API[API Gateway]
-                            DB[(PostgreSQL)]
+                            DB[(PostgreSQL + TimescaleDB)]
                         end
                     end
 
