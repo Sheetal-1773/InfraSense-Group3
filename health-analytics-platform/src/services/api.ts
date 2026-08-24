@@ -1,6 +1,6 @@
 import type { Component, Alert, HealthScore, Prediction, CorrelationGroup } from '../types'
 
-const API_BASE = import.meta.env.DEV ? '' : (import.meta.env.VITE_API_URL || 'https://infrasense-backend-tvmp.onrender.com'))
+const API_BASE = import.meta.env.DEV ? '' : (import.meta.env.VITE_API_URL || 'https://infrasense-backend-tvmp.onrender.com')
 
 async function fetchApi<T>(endpoint: string, options?: RequestInit): Promise<T> {
   try {
