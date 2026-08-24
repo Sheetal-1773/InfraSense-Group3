@@ -37,10 +37,11 @@ export function useWebSocket(options: UseWebSocketOptions = {}) {
   const connect = useCallback(() => {
     if (!enabled) return
 
-    const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
-    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000'
-    const wsHost = apiUrl.replace(/^http/, '').replace(/^\/\//, '').replace(/:8000$/, ':8000')
-    const wsUrl = `${wsProtocol}//${wsHost}/ws/${channel}`
+    const apiUrl =
+      import.meta.env.VITE_API_URL ||
+      'https://infrasense-backend-tvmp.onrender.com'
+    const wsUrl = `${wsProtocol}//${new URL(apiUrl).host}/ws/${channel}`
+    
     
     try {
       const ws = new WebSocket(wsUrl)
